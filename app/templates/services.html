@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% set active_page = "services" %}
+
+{% block head %}
+{{ super() }}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/services.css') }}">
+
+{% endblock %}
+
+{% block page_content %}
+
+
+
+<div class="container-fluid offer pt-5 pb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h2> WHAT WE OFFER </h2>
+                <div class="underline-white"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='dive6.jpg') }}" class="card-img-top" alt="img1">
+                    <div class="card-body">
+                        <h5>Book boat dives!</h5>
+                        <p>Reach the dive spot of your dreams with a boat!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='dive7.jpg') }}" class="card-img-top" alt="img1">
+                    <div class="card-body">
+                        <h5>Find dive spots!</h5>
+                        <p>Search for your favourite dive spot!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='dive8.jpg') }}" class="card-img-top" alt="img1">
+                    <div class="card-body">
+                        <h5>Check amazing underwater photos!</h5>
+                        <p>See photos of a dive spot uploaded from other divers and upload yours too!</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

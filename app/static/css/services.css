@@ -1,0 +1,8 @@
+html,body {
+    background: url('http://getwallpapers.com/wallpaper/full/4/6/e/1296576-free-download-ocean-wallpapers-high-resolution-1920x1200-image.jpg') no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-position: top left;
+}

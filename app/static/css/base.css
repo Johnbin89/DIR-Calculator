@@ -1,0 +1,13 @@
+#navname{
+   
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+body { 
+    padding-bottom: 5px; 
+}
+
+#navname{
+    padding-right: 62px;
+}
