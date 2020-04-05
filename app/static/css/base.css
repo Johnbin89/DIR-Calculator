@@ -11,3 +11,8 @@ body {
 #navname{
     padding-right: 62px;
 }
+
+.alert{
+    z-index: 200;
+    padding-top: 80px;
+}
