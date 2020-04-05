@@ -1,3 +1,4 @@
+/*
 var dataset = [
     {
         depth: 45,
@@ -28,7 +29,8 @@ var dataset = [
       time: 50
     }
   ];
-
+*/
+console.log(dataset)
 //  Use the margin convention practice 
 var margin = {top: 50, right: 50, bottom: 80, left: 80}
   , width = 1478 - margin.left - margin.right 

@@ -8,6 +8,6 @@ class NameForm(FlaskForm):
 
 class DiveForm(FlaskForm):
     depth = IntegerField('Depth', validators=[Required()])
-    #gas = IntegerField('Gas', validators=[Required()])
-    gas = SelectField(u'Gas Switch', choices=[(21, '21m - 50%'), (6, 'Oxygen'), (0, 'Surface')])
+    solve = IntegerField('Solving time', validators=[Required()], default=1)
+    gas = SelectField(u'Gas Switch', choices=[('21', '21m - 50%'), ('6', 'Oxygen'), ('0', 'Surface')])
     submit = SubmitField('Dive!')

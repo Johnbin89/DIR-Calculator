@@ -12,17 +12,21 @@
 
 {% block page_content %}
 
-  <div class="dive-details">
-    <form>
-      {{ form.csrf_token }}
-      <br>
-      {{ render_field(form.depth, placeholder='Max. depth') }}
-      {{ render_field(form.gas, placeholder='Next gas switch') }}     
-      <div class="form-group row">
-          <div class="col-sm-10 offset-sm-4">
-            {{ form.submit(class="btn btn-primary") }}
-          </div>
+<div class="dive-details">
+  <form action="/minimum-gas" method="POST">
+    {{ form.csrf_token }}
+    <br>
+    {{ render_field(form.depth, placeholder='Max. depth', pattern="[0-9]{1,10}",
+                      title="Enter only integer numbers") }}
+    {{ render_field(form.solve, placeholder='Problem solving time', 
+                      pattern="[0-9]{1,10}",
+                      title="Enter only integer numbers") }}
+    {{ render_field(form.gas) }}
+    <div class="form-group row">
+      <div class="col-sm-10 offset-sm-4">
+        {{ form.submit(class="btn btn-primary") }}
       </div>
+    </div>
   </form>
 </div>
 
@@ -31,8 +35,21 @@
 
 {% endblock %}
 
-  {% block scripts %}
-  {{ super() }}
-  <script src="https://d3js.org/d3.v5.min.js"></script>
-  <script src="{{ url_for('static', filename='d3.js') }}"></script>
-  {% endblock %}
+{% block scripts %}
+{{ super() }}
+{% if plan is defined %}
+<script>
+  var dataset = [{
+    depth: parseInt('{{ plan[0][0] }}'),
+    time: 0
+  }];
+</script>
+{% for stop in plan %}
+<script>
+  dataset.push({ depth: parseInt('{{ stop[0] }}'), time: parseInt('{{ stop[1] }}') })
+</script>
+{% endfor %}
+{% endif %}
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="{{ url_for('static', filename='d3.js') }}"></script>
+{% endblock %}
