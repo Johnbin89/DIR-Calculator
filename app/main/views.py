@@ -24,9 +24,4 @@ def minimum_gas():
         plan = min_gas_plan(depth, gas_switch, solve)
         #print(plan)
         return render_template('min_gas.html', form=form , plan=plan)
-        print(2)
     return render_template('min_gas.html', form=form)
-
-@main.route('/contactus')
-def contactus():
-    return render_template('contactus.html')

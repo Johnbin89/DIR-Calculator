@@ -193,7 +193,7 @@ function mousemove() {
     .attr("cy", yScale(selectedData.depth))
   focusText
     .html(selectedData.depth + " m" + " - "  +  selectedData.time + "min(RT)")
-    .attr("x", xScale(selectedData.time)-80)
+    .attr("x", xScale(selectedData.time)-100)
     .attr("y", yScale(selectedData.depth)-20)
   }
 function mouseout() {
