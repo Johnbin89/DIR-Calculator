@@ -32,7 +32,7 @@ var dataset = [
 */
 //console.log(dataset)
 //  Use the margin convention practice 
-var margin = {top: 50, right: 100, bottom: 80, left: 80}
+var margin = {top: 50, right: 120, bottom: 80, left: 80}
   , width = 1478 - margin.left - margin.right 
   , height = 770 - margin.top - margin.bottom; 
 
@@ -106,19 +106,19 @@ var tooltip = d3.select(".d3line")
 .append("div")
 .style("opacity", 0)
 .attr("class", "tooltip")
-.style("background-color", "white")
+.style("background-color", "aquamarine")
 .style("border", "solid")
 .style("border-width", "1px")
 .style("border-radius", "5px")
 .style("padding", "10px")
 
 var x_cord_line = svg.append('line')
-  .style("stroke", "olive")
+  .style("stroke", "aquamarine")
   .style("stroke-dasharray", "3 3")
   .style("opacity", 0)
 
 var y_cord_line = svg.append('line')
-  .style("stroke", "olive")
+  .style("stroke", "aquamarine")
   .style("stroke-dasharray", "3 3")
   .style("opacity", 0)
 
