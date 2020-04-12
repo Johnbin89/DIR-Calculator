@@ -32,6 +32,11 @@ html,body {
     width: 60px;
 }
 
+.dimpleline {
+    position: absolute;
+    z-index: 300;
+}
+
 /* d3 line css - start */
 .d3line {
     border: 2px solid darkolivegreen;
@@ -76,6 +81,20 @@ html,body {
 .axisColor text{
     fill: olive;
   }
+
+
+
+.tooltip {
+    position:absolute;
+    z-index: 500;
+}
+
+.dot-line {
+    position:absolute;
+    z-index: 501;   
+}
+
+
 /* d3 line css - end */
 
 #background-carousel{

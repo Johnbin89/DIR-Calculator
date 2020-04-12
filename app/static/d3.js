@@ -30,9 +30,9 @@ var dataset = [
     }
   ];
 */
-console.log(dataset)
+//console.log(dataset)
 //  Use the margin convention practice 
-var margin = {top: 50, right: 50, bottom: 80, left: 80}
+var margin = {top: 50, right: 100, bottom: 80, left: 80}
   , width = 1478 - margin.left - margin.right 
   , height = 770 - margin.top - margin.bottom; 
 
@@ -100,6 +100,57 @@ svg.append("path")
     .attr("class", "line") // Assign a class for styling 
     .attr("d", line); // 11. Calls the line generator 
 
+
+
+var tooltip = d3.select(".d3line")
+.append("div")
+.style("opacity", 0)
+.attr("class", "tooltip")
+.style("background-color", "white")
+.style("border", "solid")
+.style("border-width", "1px")
+.style("border-radius", "5px")
+.style("padding", "10px")
+
+
+// A function that change this tooltip when the user hover a point.
+// Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
+var mouseover = function(d) {
+tooltip
+  .style("opacity", 1)
+}
+
+
+var mousemove = function(d) {
+tooltip
+  .html("Depth: " + d.depth + "<br>" + "Time: " + d.time)
+  .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+  .style("top", (d3.mouse(this)[1]) + "px")
+  //.attr("x", xScale(selectedData.time)-100)
+  //.attr("y", yScale(selectedData.depth)+200)
+svg.append('line')
+    .attr("y1", yScale(d.depth))
+    .attr("x1", xScale(d.time))
+    .attr("y2", yScale(d.depth))
+    .attr("x2", xScale(d.time))
+    .style("stroke", "olive")
+    .style("stroke-dasharray", "3 3")
+    .transition()
+    .duration(1500)
+    .attr("y2", yScale(dataset[0].depth + 5))
+    .attr("x2", xScale(d.time))
+}
+
+// A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+var mouseleave = function(d) {
+tooltip
+  .transition()
+  .duration(200)
+  .style("opacity", 0)
+}
+
+
+
 // 12. Appends a circle for each datapoint 
 svg.selectAll(".dot")
     .data(dataset)
@@ -107,44 +158,15 @@ svg.selectAll(".dot")
     .attr("class", "dot") // Assign a class for styling
     .attr("cx", function(d) { return xScale(d.time) })
     .attr("cy", function(d) { return yScale(d.depth) })
-    .attr("r", 5);
-/* 
-      .on("mouseover", function() { 
-  			//console.log(a) 
-       this.attr('class', 'focus')
-		})
-      .on("mouseout", function() {  })
-       .on("mousemove", mousemove);
+    .attr("r", 5)
+    .style("pointer-events", "all")
+    .on('mouseover', mouseover)
+    .on('mousemove', mousemove)
+    .on('mouseout', mouseleave);
 
-  var focus = svg.append("g")
-       .attr("class", "focus")
-       .style("display", "none");
 
-   focus.append("circle")
-       .attr("r", 4.5);
 
-  focus.append("text")
-       .attr("x", 9)
-       .attr("dy", ".35em");
-
-   svg.append("rect")
-       .attr("class", "overlay")
-       .attr("width", width)
-       .attr("height", height)
-       .on("mouseover", function() { focus.style("display", null); })
-       .on("mouseout", function() { focus.style("display", "none"); })
-       .on("mousemove", mousemove);
-  
-   function mousemove() {
-     var x0 = xScale.invert(d3.mouse(this)[0]),
-         i = bisectDate(data, x0, 1),
-         d0 = dataset[i - 1],
-         d1 = dataset[i],
-         d = x0 - d0.date > d1.date - x0 ? d1 : d0;
-     focus.attr("transform", "translate(" + x(d.time) + "," + y(d.depth) + ")");
-     focus.select("text").text(d);
-   }
-*/
+/*
  // This allows to find the closest X index of the mouse:
  var bisect = d3.bisector(function(d) { return d.time; }).left;
 
@@ -158,13 +180,30 @@ svg.selectAll(".dot")
      .style("opacity", 0)
 
  // Create the text that travels along the curve of chart
- var focusText = svg
+ var focusText2 = svg
    .append('g')
    .append('text')
      .style("opacity", 0)
      .style('fill', 'olive')
      .attr("text-anchor", "start")
      .attr("alignment-baseline", "top")
+     .style("background-color", "white")
+     .style("border", "solid")
+     .style("border-width", "1px")
+     .style("border-radius", "5px")
+     .style("padding", "10px")
+
+  var focusText = d3.select(".d3line")
+  .append("div")
+  .style("opacity", 0)
+  .attr("class", "tooltip")
+  .style("background-color", "white")
+  .style("border", "solid")
+  .style("border-width", "1px")
+  .style("border-radius", "5px")
+  .style("padding", "10px")
+  .style("position", "relative")
+
 
  // Create a rect on top of the svg area: this rectangle recovers mouse position
  svg
@@ -200,3 +239,4 @@ function mouseout() {
   focus.style("opacity", 0)
   focusText.style("opacity", 0)
 }
+*/
