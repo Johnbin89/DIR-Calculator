@@ -117,6 +117,11 @@ var x_cord_line = svg.append('line')
   .style("stroke-dasharray", "3 3")
   .style("opacity", 0)
 
+  var y_cord_line = svg.append('line')
+  .style("stroke", "olive")
+  .style("stroke-dasharray", "3 3")
+  .style("opacity", 0)
+
 // A function that change this tooltip when the user hover a point.
 // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
 var mouseover = function(d) {
@@ -124,12 +129,14 @@ tooltip
   .style("opacity", 1)
 x_cord_line
   .style("opacity", 1)
+y_cord_line
+  .style("opacity", 1)
 }
 
 
 var mousemove = function(d) {
 tooltip
-  .html("Depth: " + d.depth + "<br>" + "Time: " + d.time)
+  .html("Depth: " + d.depth + " m" + "<br>" + "Time: " + d.time + "'")
   .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
   .style("top", (d3.mouse(this)[1]) + "px")
   //.attr("x", xScale(selectedData.time)-100)
@@ -143,6 +150,15 @@ x_cord_line
     .duration(1500)
     .attr("y2", yScale(dataset[0].depth + 5))
     .attr("x2", xScale(d.time))
+y_cord_line
+    .attr("y1", yScale(d.depth))
+    .attr("x1", xScale(d.time))
+    .attr("y2", yScale(d.depth))
+    .attr("x2", xScale(d.time))
+    .transition()
+    .duration(1500)
+    .attr("y2", yScale(d.depth))
+    .attr("x2", xScale(0))
 }
 
 // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
@@ -152,6 +168,10 @@ tooltip
   .duration(200)
   .style("opacity", 0)
 x_cord_line
+  .transition()
+  .duration(200)
+  .style("opacity", 0)
+y_cord_line
   .transition()
   .duration(200)
   .style("opacity", 0)
