@@ -117,7 +117,7 @@ var x_cord_line = svg.append('line')
   .style("stroke-dasharray", "3 3")
   .style("opacity", 0)
 
-  var y_cord_line = svg.append('line')
+var y_cord_line = svg.append('line')
   .style("stroke", "olive")
   .style("stroke-dasharray", "3 3")
   .style("opacity", 0)
@@ -127,6 +127,7 @@ var x_cord_line = svg.append('line')
 var mouseover = function(d) {
 tooltip
   .style("opacity", 1)
+  .style("display", "block")
 x_cord_line
   .style("opacity", 1)
 y_cord_line
@@ -147,7 +148,7 @@ x_cord_line
     .attr("y2", yScale(d.depth))
     .attr("x2", xScale(d.time))
     .transition()
-    .duration(1500)
+    .duration(600)
     .attr("y2", yScale(dataset[0].depth + 5))
     .attr("x2", xScale(d.time))
 y_cord_line
@@ -156,7 +157,7 @@ y_cord_line
     .attr("y2", yScale(d.depth))
     .attr("x2", xScale(d.time))
     .transition()
-    .duration(1500)
+    .duration(600)
     .attr("y2", yScale(d.depth))
     .attr("x2", xScale(0))
 }
@@ -167,6 +168,7 @@ tooltip
   .transition()
   .duration(200)
   .style("opacity", 0)
+  .style("display", "none")
 x_cord_line
   .transition()
   .duration(200)
