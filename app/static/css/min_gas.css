@@ -30,12 +30,9 @@ html,body {
     padding-right: 20px;
     padding-left: 40px;
     width: 60px;
+    color: yellow;
 }
 
-.dimpleline {
-    position: absolute;
-    z-index: 300;
-}
 
 /* d3 line css - start */
 .d3line {
