@@ -32,13 +32,14 @@
 </div>
 <div class="plan-details">
   <h3>Ascent Plan:</h3>
-  <br>
+  {% if plan is defined %}
   <p>{{ plan[0][0] }}m: 1' donate gas</p>
-  <p>{{ plan[0][0] }}m --> {{ plan[1][0] }}m: 9m/min ascent</p>
+  <p>{{ plan[0][0] }}m --> {{ plan[1][0] }}m: 9m/min ascent rate</p>
   {% for i in range(1, (plan|length - 2)) %}
     <p> {{ plan[i][0] }}m: 1' </p>
   {% endfor %}
   <p> {{ plan[-1][0] }}m: 1' gas switch</p>
+  {% endif %}
 </div>
 
 
