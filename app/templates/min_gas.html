@@ -12,6 +12,7 @@
 
 {% block page_content %}
 
+
 <div class="dive-details">
   <form action="/minimum-gas" method="POST">
     {{ form.csrf_token }}
@@ -29,6 +30,17 @@
     </div>
   </form>
 </div>
+<div class="plan-details">
+  <h3>Ascent Plan:</h3>
+  <br>
+  <p>{{ plan[0][0] }}m: 1' donate gas</p>
+  <p>{{ plan[0][0] }}m --> {{ plan[1][0] }}m: 9m/min ascent</p>
+  {% for i in range(1, (plan|length - 2)) %}
+    <p> {{ plan[i][0] }}m: 1' </p>
+  {% endfor %}
+  <p> {{ plan[-1][0] }}m: 1' gas switch</p>
+</div>
+
 
 <div class="d3line"></div>
 

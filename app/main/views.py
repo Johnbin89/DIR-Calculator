@@ -22,6 +22,6 @@ def minimum_gas():
         solve = form.solve.data
         #print(depth, gas_switch)
         plan = min_gas_plan(depth, gas_switch, solve)
-        #print(plan)
+        print(plan)
         return render_template('min_gas.html', form=form , plan=plan)
     return render_template('min_gas.html', form=form)

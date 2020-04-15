@@ -100,6 +100,14 @@ svg.append("path")
     .attr("class", "line") // Assign a class for styling 
     .attr("d", line); // 11. Calls the line generator 
 
+//10. Add grapth title
+svg.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "24px") 
+        .style("fill", "yellow")  
+        .text("Minimum gas calculation from bottom to next available gas source");
 
 
 var tooltip = d3.select(".d3line")

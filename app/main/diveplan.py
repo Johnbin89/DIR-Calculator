@@ -1,7 +1,9 @@
+from math import ceil
+
 valid_stops = [stop for stop in range(0, 60, 3)]
 #print(valid_stops)
 
-def find_first_stop(depth=43):
+def find_first_stop(depth=45):
     half = depth / 2
     stop_index = int(half // 3) + 1
     #print(stop_index)
@@ -25,7 +27,18 @@ def min_gas_plan(start_depth, target_depth, solve_time):
     return plan
 
 
+def min_gas_litres(plan):
+    avg_depth = ((plan[0][0] - plan[-1][0]) / 2) + plan[-1][0]
+    avg_ata = (avg_depth + 10)*0.1
+    litres = plan[-1][1] * 60 * avg_ata
+    return litres
 
+def min_gas_bar(litres, tank_vol):
+    bar = litres / tank_vol
+    return (ceil(bar*0.1)/0.1) #rounding to tens place ex. 73.xxx bar -> 80 bar
 
-#find_first_stop()
-#min_gas_plan(45, 21, 1)
+p = min_gas_plan(50, 21, 1)
+l = min_gas_litres(p)
+print(l)
+b = min_gas_bar(1290, 24)
+print(b)
