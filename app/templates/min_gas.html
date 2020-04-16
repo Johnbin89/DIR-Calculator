@@ -35,7 +35,7 @@
   <h3>Ascent Plan:</h3>
   <div class="scrollable"> 
   <p>{{ plan[0][0] }}m: 1' donate gas</p>
-  <p>{{ plan[0][0] }}m --> {{ plan[1][0] }}m: 9m/min ascent rate</p>
+  <p>{{ plan[0][0] }}m --> {{ plan[1][0] }}m: 9m/min , [ {{ time_to_fs }}' ]</p>
   {% for i in range(1, (plan|length - 2)) %}
     <p> {{ plan[i][0] }}m: 1' </p>
   {% endfor %}

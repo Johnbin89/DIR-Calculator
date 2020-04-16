@@ -14,7 +14,6 @@ def index():
 def minimum_gas():
     form = DiveForm()  
     if form.validate_on_submit():
-        
         depth = form.depth.data
         gas_switch = int(form.gas.data)
         if gas_switch == 0 and depth > 30:
@@ -23,11 +22,12 @@ def minimum_gas():
         solve = form.solve.data
         #print(depth, gas_switch)
         plan = min_gas_plan(depth, gas_switch, solve)
+        time_to_fs = plan[1][1] - solve   #time need from depth to first stop
         print(plan)
         litres = min_gas_litres(plan)
         bar = min_gas_bar(litres, 24)
         tank_form = TankForm(tank=24, min_gas_L = litres)
-        return render_template('min_gas.html', form=form , plan=plan, tank_form=tank_form, bar=bar, litres=litres)
+        return render_template('min_gas.html', form=form , plan=plan, tank_form=tank_form, bar=bar, litres=litres, time_to_fs=time_to_fs)
     return render_template('min_gas.html', form=form)
 
 
