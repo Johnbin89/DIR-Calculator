@@ -5,8 +5,10 @@ RUN adduser -D jbin
 WORKDIR /home/jbin
 
 COPY requirements.txt requirements.txt
-RUN python -m venv env
-RUN env/bin/pip install -r requirements.txt
+RUN python -m venv env && \
+ apt-get update && \
+ apt-get -y install gcc && \
+ env/bin/pip install -r requirements.txt
 #RUN venv/bin/pip install gunicorn
 
 COPY app app
