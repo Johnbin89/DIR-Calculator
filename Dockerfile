@@ -1,11 +1,8 @@
-FROM python:3.6-alpine
+FROM python:3.6
 
 RUN adduser -D jbin
 
 WORKDIR /home/jbin
-
-RUN apt-get update && \
- apt-get -y install gcc
 
 COPY requirements.txt requirements.txt
 RUN python -m venv env && \
