@@ -12,8 +12,12 @@ def find_first_stop(depth=45):
 def min_gas_plan(start_depth, target_depth, solve_time):
     target_index = target_depth / 3
     first_stop, first_index = find_first_stop(start_depth)
+    if (start_depth - first_stop)%9 == 0:
+        travel_time = (start_depth - first_stop)//9
+    else:
+        travel_time = (start_depth - first_stop)//9 + 1
     plan = [[start_depth, solve_time], 
-            [first_stop, ((start_depth - first_stop ) // 9) + solve_time + 1]]
+            [first_stop, travel_time + solve_time]]
     if first_stop > target_depth:
         current_index = first_index
         while (current_index > target_index):
