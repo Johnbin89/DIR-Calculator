@@ -1,3 +1,3 @@
 #!/bin/bash
 source env/bin/activate
-exec gunicorn -b :5000 --access-logfile - --error-logfile - jbin:app
+exec python3 manage.py runserver --host 0.0.0.0
