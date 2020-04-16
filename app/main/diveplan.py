@@ -31,14 +31,15 @@ def min_gas_litres(plan):
     avg_depth = ((plan[0][0] - plan[-1][0]) / 2) + plan[-1][0]
     avg_ata = (avg_depth + 10)*0.1
     litres = plan[-1][1] * 60 * avg_ata
-    return litres
+    return int(litres)
 
 def min_gas_bar(litres, tank_vol):
     bar = litres / tank_vol
-    return (ceil(bar*0.1)/0.1) #rounding to tens place ex. 73.xxx bar -> 80 bar
-
+    return int((ceil(bar*0.1)/0.1)) #rounding to tens place ex. 73.xxx bar -> 80 bar
+'''
 p = min_gas_plan(50, 21, 1)
 l = min_gas_litres(p)
 print(l)
 b = min_gas_bar(1290, 24)
 print(b)
+'''

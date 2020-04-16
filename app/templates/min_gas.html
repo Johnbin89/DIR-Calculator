@@ -1,4 +1,4 @@
-{% from "_render_field.html" import render_field %}
+{% from "_render_field.html" import render_field, tank_field %}
 {% extends "base.html" %}
 {% set active_page = "Minimum Gas" %}
 
@@ -30,17 +30,29 @@
     </div>
   </form>
 </div>
+{% if plan is defined %}
 <div class="plan-details">
-  <h3>Ascent Plan:</h3>
-  {% if plan is defined %}
+  <h3>Ascent Plan:</h3>  
   <p>{{ plan[0][0] }}m: 1' donate gas</p>
   <p>{{ plan[0][0] }}m --> {{ plan[1][0] }}m: 9m/min ascent rate</p>
   {% for i in range(1, (plan|length - 2)) %}
     <p> {{ plan[i][0] }}m: 1' </p>
   {% endfor %}
   <p> {{ plan[-1][0] }}m: 1' gas switch</p>
-  {% endif %}
 </div>
+<div class="tank-details">
+  <h4>Minimum Gas: {{ litres }} L</h4>
+  <form action="/gas_used" method="POST" role="form">
+    {{ tank_form.csrf_token }}
+    <p id="litres-field"> {{ tank_form.min_gas_L }}</p>
+    <br>
+    {{ tank_field(tank_form.tank) }}
+    <p id="bar-field"> {{ bar }} bar </p>
+  </form>
+</div>
+
+
+{% endif %}
 
 
 <div class="d3line"></div>
@@ -66,4 +78,25 @@
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <!-- <script src="http://dimplejs.org/dist/dimple.v2.3.0.min.js"></script> -->
 <script src="{{ url_for('static', filename='d3.js') }}"></script>
+<script type=text/javascript>
+
+$(function() {
+    $('button').click(function() {
+        $.ajax({
+            url: '/gas_used',
+            data: $('form').serialize(),
+            type: 'POST',
+            success: function(response) {
+                var parsed_data = JSON.parse(response);
+                $("#bar-field").html(parsed_data.bar + " bar");
+                console.log(response);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+});
+
+</script>
 {% endblock %}
