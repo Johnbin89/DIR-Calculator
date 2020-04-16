@@ -32,13 +32,15 @@
 </div>
 {% if plan is defined %}
 <div class="plan-details">
-  <h3>Ascent Plan:</h3>  
+  <h3>Ascent Plan:</h3>
+  <div class="scrollable"> 
   <p>{{ plan[0][0] }}m: 1' donate gas</p>
   <p>{{ plan[0][0] }}m --> {{ plan[1][0] }}m: 9m/min ascent rate</p>
   {% for i in range(1, (plan|length - 2)) %}
     <p> {{ plan[i][0] }}m: 1' </p>
   {% endfor %}
   <p> {{ plan[-1][0] }}m: 1' gas switch</p>
+  </div> 
 </div>
 <div class="tank-details">
   <h4>Minimum Gas: {{ litres }} L</h4>
@@ -47,7 +49,10 @@
     <p id="litres-field"> {{ tank_form.min_gas_L }}</p>
     <br>
     {{ tank_field(tank_form.tank) }}
-    <p id="bar-field"> {{ bar }} bar </p>
+    <div class="form-group row">
+      <label for="" class="col-sm-2 col-form-label">Pressure:</label>
+      <p id="bar-field"> {{ bar }} bar </p>
+    </div>
   </form>
 </div>
 
