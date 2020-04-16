@@ -14,7 +14,7 @@ COPY app app
 COPY manage.py config.py boot.sh ./
 RUN chmod +x boot.sh
 
-ENV FLASK_APP microblog.py
+ENV FLASK_APP manage.py
 
 RUN chown -R jbin:jbin ./
 USER jbin
