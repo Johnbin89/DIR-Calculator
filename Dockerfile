@@ -1,6 +1,6 @@
 FROM python:3.6
 
-RUN adduser -D jbin
+RUN useradd -ms /bin/bash jbin
 
 WORKDIR /home/jbin
 
