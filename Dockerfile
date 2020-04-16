@@ -20,4 +20,4 @@ RUN chown -R jbin:jbin ./
 USER jbin
 
 EXPOSE 5000
-ENTRYPOINT ["./boot.sh"]
+ENTRYPOINT ["sh", "boot.sh"]
