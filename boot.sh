@@ -1,3 +1,3 @@
 #!/bin/sh
 source env/bin/activate
-python3 manage.py runserver
+exec python3 manage.py runserver
