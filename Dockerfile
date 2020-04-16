@@ -4,10 +4,11 @@ RUN adduser -D jbin
 
 WORKDIR /home/jbin
 
+RUN apt-get update && \
+ apt-get -y install gcc
+
 COPY requirements.txt requirements.txt
 RUN python -m venv env && \
- apt-get update && \
- apt-get -y install gcc && \
  env/bin/pip install -r requirements.txt
 #RUN venv/bin/pip install gunicorn
 
