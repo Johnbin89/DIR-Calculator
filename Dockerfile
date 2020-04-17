@@ -6,8 +6,8 @@ WORKDIR /home/jbin
 
 COPY requirements.txt requirements.txt
 RUN python -m venv env && \
- env/bin/pip install -r requirements.txt
- #env/bin/pip install gunicorn
+ env/bin/pip install -r requirements.txt &&\
+ env/bin/pip install gunicorn
 
 COPY app app
 #COPY migrations migrations
