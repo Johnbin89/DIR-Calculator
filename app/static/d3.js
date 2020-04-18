@@ -57,8 +57,9 @@ var line = d3.line()
 var svg = d3.select(".d3line").append("svg")
     .attr("width", '100%')
     .attr("height", '100%')
-    //.attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("preserveAspectRatio", "xMinYMin meet")
     .attr("viewBox", "0 0 1478 770")
+    .style("display", "inline-block")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -119,6 +120,8 @@ var tooltip = d3.select(".d3line")
 .style("border-width", "1px")
 .style("border-radius", "5px")
 .style("padding", "10px")
+.style("pointer-events", "none")
+.style("position", "absolute")
 
 var x_cord_line = svg.append('line')
   .style("stroke", "aquamarine")
@@ -144,10 +147,11 @@ y_cord_line
 
 
 var mousemove = function(d) {
+svgDim = svg.node().getBoundingClientRect();
 tooltip
   .html("Depth: " + d.depth + " m" + "<br>" + "Time: " + d.time + "'")
-  .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-  .style("top", (d3.mouse(this)[1]) + "px")
+  .style("left", ((d3.mouse(this)[0]+90) * ((svgDim.width+90) / 1478)) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+  .style("top", ((d3.mouse(this)[1]-20) * ((svgDim.height-20) / 770)) + "px")
   //.attr("x", xScale(selectedData.time)-100)
   //.attr("y", yScale(selectedData.depth)+200)
 x_cord_line

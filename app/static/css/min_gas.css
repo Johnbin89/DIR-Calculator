@@ -96,10 +96,12 @@ html,body {
 .d3line {
     border: 2px solid darkolivegreen;
     border-radius: 10px;
-    position: absolute;
+    position: relative;
     top: 80px;
-    right: 360px;
+    right: -10px;
     width: 80%;
+    overflow: hidden;
+    display: inline-block;
     height: auto;
 }
 /* Style the lines by removing the fill and applying a stroke */
