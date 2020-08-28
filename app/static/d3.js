@@ -149,7 +149,7 @@ y_cord_line
 var mousemove = function(d) {
 svgDim = svg.node().getBoundingClientRect();
 tooltip
-  .html("Depth: " + d.depth + " m" + "<br>" + "Time: " + d.time + "'")
+  .html("Depth: " + d.depth + " m" + "<br>" + "Runtime (RT): " + d.time + "'")
   .style("left", ((d3.mouse(this)[0]+90) * ((svgDim.width+90) / 1478)) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
   .style("top", ((d3.mouse(this)[1]-20) * ((svgDim.height-20) / 770)) + "px")
   //.attr("x", xScale(selectedData.time)-100)
