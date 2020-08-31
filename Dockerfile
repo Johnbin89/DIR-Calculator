@@ -11,7 +11,6 @@ RUN python -m venv env && \
 COPY app app
 #COPY migrations migrations
 COPY manage.py config.py boot.sh ./
-RUN chmod +x boot.sh
 
 #ENV FLASK_APP manage.py
 
@@ -19,4 +18,4 @@ RUN chown -R jbin:jbin ./
 USER jbin
 
 EXPOSE 5000
-ENTRYPOINT ["bash", "boot.sh"]
+ENTRYPOINT ["./boot.sh"]
