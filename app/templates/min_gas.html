@@ -12,35 +12,17 @@
 
 {% block page_content %}
 
-
-<div class="dive-details">
-  <form action="/minimum-gas" method="POST">
-    {{ form.csrf_token }}
-    <br>
-    {{ render_field(form.depth, placeholder='Max. depth', pattern="[0-9]{1,10}",
-                      title="Enter only integer numbers") }}
-    {{ render_field(form.solve, placeholder='Problem solving time', 
-                      pattern="[0-9]{1,10}",
-                      title="Enter only integer numbers") }}
-    {{ render_field(form.gas) }}
-    <div class="form-group row">
-      <div class="col-sm-10 offset-sm-4">
-        {{ form.submit(class="btn btn-primary") }}
-      </div>
-    </div>
-  </form>
-</div>
 {% if plan is defined %}
 <div class="plan-details">
   <h3>Ascent Plan:</h3>
-  <div class="scrollable"> 
-  <p>{{ plan[0][0] }}m: 1' donate gas</p>
-  <p>{{ plan[0][0] }}m --> {{ plan[1][0] }}m: 9m/min , [ {{ time_to_fs }}' ]</p>
-  {% for i in range(1, (plan|length - 2)) %}
+  <div class="scrollable">
+    <p>{{ plan[0][0] }}m: 1' donate gas</p>
+    <p>{{ plan[0][0] }}m --> {{ plan[1][0] }}m: 9m/min , [ {{ time_to_fs }}' ]</p>
+    {% for i in range(1, (plan|length - 2)) %}
     <p> {{ plan[i][0] }}m: 1' </p>
-  {% endfor %}
-  <p> {{ plan[-1][0] }}m: 1' gas switch</p>
-  </div> 
+    {% endfor %}
+    <p> {{ plan[-1][0] }}m: 1' gas switch</p>
+  </div>
 </div>
 <div class="tank-details">
   <h4>Minimum Gas: {{ litres }} L</h4>
@@ -56,11 +38,74 @@
   </form>
 </div>
 
+<div class="d3line"></div>
+{% else %}
 
+<div class="row">
+  <div class="col-md-8 offset-1 dive-details">
+    <div class="card text-center  mb-3" id="help_box">
+      <div class="card-header">
+        <h3 class="card-title">Instructions</h3>
+      </div>
+      <div class="card-body">
+        <ul class="list-group text-left border-0">
+          <li class="list-group-item border-0">Insert plan settings to right window & press Dive!
+            <ul class="list-group border-0">
+              <li class="list-group-item border-0">Depth: <span class="instfieldtext">Your maximum depth (meters)</span></li>
+              <li class="list-group-item border-0">Solving time: <span class="instfieldtext">The time [mins] it will take you to address the problem and prepare for ascent</span> </li>
+              <li class="list-group-item border-0">Gas Switch: <span class="instfieldtext">Next available gas source (your stage/deco cylinder Or Surface)</span> 
+              </li>
+            </ul>
+          </li>
+          <li class="list-group-item border-0">Minimum Gas [Tank option on chart page]
+            <ul class="list-group border-0">
+              <!--
+              <li class="list-group-item mb-0 border-info rounded">
+                <img src="{{ url_for('static', filename='images/tank_box_img.png') }}" class="img-fluid" alt="tank box img">
+              </li>
+              -->
+              <li class="list-group-item border-0">Tank: <span class="instfieldtext">Select volume of your bottom gas from dropdown menu.
+                Dual Cylinders only.</span>  (This is a DIR calculator!)
+              </li>
+              <li class="list-group-item border-0 bg-0">Update to calculate pressure [bar]</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-3 dive-details">
+    <div class="card text-center  mb-3" id="help_box">
+      <div class="card-header">
+        <h3 class="card-title">Plan settings</h3>
+      </div>
+      <div class="card-body">
+        <form action="/minimum-gas" method="POST">
+          {{ form.csrf_token }}
+          <br>
+          {{ render_field(form.depth, placeholder='Max. depth', pattern="[0-9]{1,10}",
+                              title="Enter only integer numbers") }}
+          {{ render_field(form.solve, placeholder='Problem solving time', 
+                              pattern="[0-9]{1,10}",
+                              title="Enter only integer numbers") }}
+          {{ render_field(form.gas) }}
+          <div class="form-group row">
+            <div class="col-sm-10 offset-sm-4">
+              {{ form.submit(class="btn btn-primary") }}
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
 {% endif %}
 
 
-<div class="d3line"></div>
+
 
 
 {% endblock %}

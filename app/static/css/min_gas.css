@@ -11,15 +11,23 @@ html,body {
     background-position: top left;
 }
 
+.card-title{
+    color: yellow
+}
+
+
+.list-group-item {
+    background-color: transparent;
+    color: yellow;
+    font-size: 1.5rem;
+}
+
+.instfieldtext {
+    color: lightskyblue;
+}
 
 .dive-details {
-    border: 2px solid darkolivegreen;
-    border-radius: 10px;
-    position: absolute;
     top: 80px;
-    right: 5px;
-    width: 350px;
-    background-color: rgba(1, 145, 133, 0.363);  
 }
 
 .dive-details input{
@@ -28,7 +36,6 @@ html,body {
 
 .dive-details label{
     color: yellow;
-    margin-left: 30px;
 }
 
 .plan-details {
@@ -90,7 +97,11 @@ html,body {
     margin-top: 7px;
 }
 
-
+#help_box{
+    background-color: #4cb4c700;
+    border: 2px solid darkolivegreen;
+    border-radius: 10px;
+}
 
 /* d3 line css - start */
 .d3line {
