@@ -13,6 +13,23 @@
 {% block page_content %}
 
 {% if plan is defined %}
+<div class="dive-details w-plan">
+  <form action="/minimum-gas" method="POST">
+    {{ form.csrf_token }}
+    <br>
+    {{ render_field(form.depth, placeholder='Max. depth', pattern="[0-9]{1,10}",
+                      title="Enter only integer numbers") }}
+    {{ render_field(form.solve, placeholder='Problem solving time', 
+                      pattern="[0-9]{1,10}",
+                      title="Enter only integer numbers") }}
+    {{ render_field(form.gas) }}
+    <div class="form-group row">
+      <div class="col-sm-10 offset-sm-4">
+        {{ form.submit(class="btn btn-primary") }}
+      </div>
+    </div>
+  </form>
+</div>
 <div class="plan-details">
   <h3>Ascent Plan:</h3>
   <div class="scrollable">

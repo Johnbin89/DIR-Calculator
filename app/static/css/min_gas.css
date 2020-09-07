@@ -38,6 +38,19 @@ html,body {
     color: yellow;
 }
 
+.w-plan{
+    border: 2px solid darkolivegreen;
+    border-radius: 10px;
+    position: absolute;
+    right: 5px;
+    width: 350px;
+    background-color: rgba(1, 145, 133, 0.363);  
+}
+
+.w-plan label{
+    margin-left: 30px;
+}
+
 .plan-details {
     border: 2px solid darkolivegreen;
     border-radius: 10px;
