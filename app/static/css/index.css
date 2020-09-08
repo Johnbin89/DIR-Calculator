@@ -4,7 +4,7 @@ html,body {
     position: relative;
     overflow: hidden;
 
-    background: url('https://www.wuwm.com/sites/wuwm/files/styles/x_large/public/201907/AdobeStock_143932362.jpeg') no-repeat center center fixed; 
+    background: url("/static/images/index_img.jpg") no-repeat; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
