@@ -33,12 +33,12 @@
 <div class="plan-details">
   <h3>Ascent Plan:</h3>
   <div class="scrollable">
-    <p>{{ plan[0][0] }}m: 1' donate gas</p>
-    <p>{{ plan[0][0] }}m --> {{ plan[1][0] }}m: 9m/min , [ {{ time_to_fs }}' ]</p>
+    <p>{{ plan[0].get_depth() }}m: 1' donate gas</p>
+    <p>{{ plan[0].get_depth() }}m --> {{ plan[1].get_depth() }}m: 9m/min , [ {{ time_to_fs }}' ]</p>
     {% for i in range(1, (plan|length - 2)) %}
-    <p> {{ plan[i][0] }}m: 1' </p>
+    <p> {{ plan[i].get_depth() }}m: 1' </p>
     {% endfor %}
-    <p> {{ plan[-1][0] }}m: 1' gas switch</p>
+    <p> {{ plan[-1].get_depth() }}m: 1' gas switch</p>
   </div>
 </div>
 <div class="tank-details">
@@ -132,13 +132,13 @@
 {% if plan is defined %}
 <script>
   var dataset = [{
-    depth: parseInt('{{ plan[0][0] }}'),
+    depth: parseInt('{{ plan[0].get_depth() }}'),
     time: 0
   }];
 </script>
 {% for stop in plan %}
 <script>
-  dataset.push({ depth: parseInt('{{ stop[0] }}'), time: parseInt('{{ stop[1] }}') })
+  dataset.push({ depth: parseInt('{{ stop.get_depth() }}'), time: parseInt('{{ stop.get_time() }}') })
 </script>
 {% endfor %}
 {% endif %}

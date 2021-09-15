@@ -22,7 +22,7 @@ def minimum_gas():
         solve = form.solve.data
         #print(depth, gas_switch)
         plan = min_gas_plan(depth, gas_switch, solve)
-        time_to_fs = plan[1][1] - solve   #time need from depth to first stop
+        time_to_fs = plan[1].get_time() - solve   #time need from depth to first stop
         print(plan)
         litres = min_gas_litres(plan)
         bar = min_gas_bar(litres, 24)
