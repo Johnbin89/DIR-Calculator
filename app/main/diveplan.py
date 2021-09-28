@@ -41,10 +41,11 @@ def min_gas_litres(plan):
 def min_gas_bar(litres, tank_vol):
     bar = litres / tank_vol
     return int((ceil(bar*0.1)/0.1)) #rounding to tens place ex. 73.xxx bar -> 80 bar
-
+'''
 p = min_gas_plan(45, 21, 1)
 print(p)
 l = min_gas_litres(p)
 print(l)
 b = min_gas_bar(1290, 24)
 print(b)
+'''
