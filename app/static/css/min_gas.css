@@ -47,6 +47,14 @@ html,body {
     background-color: rgba(1, 145, 133, 0.363);  
 }
 
+.share{
+    position: absolute;
+    right: 420px;
+    top: 100px;
+    z-index: 1;
+
+}
+
 .w-plan label{
     margin-left: 30px;
 }

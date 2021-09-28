@@ -13,6 +13,14 @@
     <div class="col-sm-4">
         {{ field(class_='form-control', **kwargs)|safe }}
     </div>
-    <a href="#" id="update-bar"><button class="btn btn-primary" type="button">Update</button></a>
+    <a href="#" id="update-bar"><button class="btn btn-primary" type="button" id='update-bar-button'>Update</button></a>
+</div>
+{% endmacro %}
+
+{% macro share_button() %}
+<div class="form-group row">
+    <div class="col-sm-10 offset-sm-4" >
+        <a href="#" id="update-bar"><button class="btn btn-primary" type="button" id='share_button' data-toggle="modal" data-target="#exampleModal">Share</button></a>
+    </div>
 </div>
 {% endmacro %}

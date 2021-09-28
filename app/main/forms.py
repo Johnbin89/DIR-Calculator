@@ -15,3 +15,8 @@ class DiveForm(FlaskForm):
 class TankForm(FlaskForm):
     tank = SelectField(u'Tank', choices=[('14', 'D7'), ('17', 'D8.5'), ('20', 'D10'), ('24', 'D12'), ('30', 'D15')])
     min_gas_L = HiddenField()
+
+class ShareForm(FlaskForm):
+    depth = HiddenField()
+    solve = HiddenField()
+    gas = HiddenField()

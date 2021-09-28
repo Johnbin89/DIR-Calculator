@@ -1,8 +1,9 @@
 from flask import render_template, session, redirect, url_for, flash, current_app, request, json
 from . import main
 from ..import db
-from .forms import DiveForm, TankForm
+from .forms import DiveForm, ShareForm, TankForm
 from .diveplan import min_gas_plan, min_gas_litres, min_gas_bar
+from ..models import ShareLink
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -27,7 +28,8 @@ def minimum_gas():
         litres = min_gas_litres(plan)
         bar = min_gas_bar(litres, 24)
         tank_form = TankForm(tank=24, min_gas_L = litres)
-        return render_template('min_gas.html', form=form , plan=plan, tank_form=tank_form, bar=bar, litres=litres, time_to_fs=time_to_fs)
+        share_form = ShareForm(depth = depth, solve = solve, gas_switch = gas_switch)
+        return render_template('min_gas.html', form=form , plan=plan, tank_form=tank_form, bar=bar, litres=litres, time_to_fs=time_to_fs, share_form = share_form)
     return render_template('min_gas.html', form=form)
 
 
@@ -37,3 +39,25 @@ def gas_used():
     litres = int(request.form['min_gas_L'])
     bar = min_gas_bar(litres, selected_tank)
     return json.dumps({'bar':bar})
+
+@main.route('/share', methods=['POST'])
+def share():
+    depth = int(request.form['depth'])
+    solve = int(request.form['solve'])
+    gas = int(request.form['gas'])
+    hash = get_hash()
+    sharelink = ShareLink(depth = depth, gas = gas, solve = solve, hash = hash)
+    #db.session.add(sharelink)
+    #db.session.commit()
+    return json.dumps({'hash': hash})
+
+def get_hash():
+    import random
+    import string
+    import hashlib
+    length = 6
+    SIMPLE_CHARS = string.ascii_letters
+    def get_random_string():
+        return ''.join(random.choice(SIMPLE_CHARS) for i in range(length))
+    hash = hashlib.sha256(str(get_random_string()).encode('utf-8'))
+    return hash.hexdigest()[:length]

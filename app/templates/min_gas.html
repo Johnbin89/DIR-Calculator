@@ -1,4 +1,4 @@
-{% from "_render_field.html" import render_field, tank_field %}
+{% from "_render_field.html" import render_field, tank_field, share_button %}
 {% extends "base.html" %}
 {% set active_page = "Minimum Gas" %}
 
@@ -24,10 +24,19 @@
                       title="Enter only integer numbers") }}
     {{ render_field(form.gas) }}
     <div class="form-group row">
-      <div class="col-sm-10 offset-sm-4">
+      <div class="col-sm-10 offset-sm-4" >
         {{ form.submit(class="btn btn-primary") }}
       </div>
     </div>
+  </form>
+</div>
+<div class='dive-details share'>
+  <form action="/share" method="POST" role='form'>
+    {{ share_form.csrf_token }}
+    <p id="depth-field"> {{ share_form.depth }}</p>
+    <p id="solve-field"> {{ share_form.solve }}</p>
+    <p id="gas-field"> {{ share_form.gas }}</p>
+    {{ share_button() }}
   </form>
 </div>
 <div class="plan-details">
@@ -56,6 +65,27 @@
 </div>
 
 <div class="d3line"></div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Share Link</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <span id="share-link"></span>
+      </div>
+      <div class="modal-footer">
+        <p id='copied-message'></p>
+        <button type="button" class="btn btn-secondary" id="copyLink-close" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="copyLink"><Caption>Copy</Caption></button>
+      </div>
+    </div>
+  </div>
+</div>
 {% else %}
 
 <div class="row">
@@ -148,7 +178,7 @@
 <script type=text/javascript>
 
 $(function() {
-    $('button').click(function() {
+    $('#update-bar-button').click(function() {
         $.ajax({
             url: '/gas_used',
             data: $('form').serialize(),
@@ -163,6 +193,46 @@ $(function() {
             }
         });
     });
+});
+
+$(function() {
+    $('#share_button').click(function() {
+        $.ajax({
+            url: '/share',
+            data: $('form').serialize(),
+            type: 'POST',
+            success: function(response) {
+                var parsed_data = JSON.parse(response);
+                $("#share-link").html(window.location.href + '/' + parsed_data.hash);
+                console.log(response)
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+});
+
+$(function() {
+  $('#copyLink').click(function(){
+
+    var text = $("#share-link").get(0)
+    var selection = window.getSelection();
+    var range = document.createRange();
+    range.selectNodeContents(text);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    //add to clipboard.
+    document.execCommand('copy');
+    selection.removeAllRanges();
+    $("#copied-message").html("Url Copied!");
+  });
+});
+
+$(function() {
+  $('#copyLink-close').click(function(){
+    $("#copied-message").html("");
+  });
 });
 
 </script>

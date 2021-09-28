@@ -1,6 +1,15 @@
 from . import db
 #from sqlalchemy import func, DateTime
 
+class ShareLink(db.Model):
+    __tablename__ = 'sharelink'
+    id = db.Column(db.Integer, primary_key=True)
+    depth = db.Column(db.Integer)
+    gas = db.Column(db.Integer)
+    solve = db.Column(db.Integer)
+    hash = db.Column(db.String(6))
+
+
 '''
 class Role(db.Model):
     __tablename__ = 'roles'
