@@ -13,7 +13,16 @@ def index():
 
 @main.route('/minimum-gas', methods=['GET', 'POST'])
 def minimum_gas():
-    form = DiveForm()  
+    def create_plan():
+        plan = min_gas_plan(depth, gas_switch, solve)
+        time_to_fs = plan[1].get_time() - solve   #time need from depth to first stop
+        print(plan)
+        litres = min_gas_litres(plan)
+        bar = min_gas_bar(litres, 24)
+        tank_form = TankForm(tank=24, min_gas_L = litres)
+        share_form = ShareForm(depth = depth, solve = solve, gas_switch = gas_switch)
+        return plan,tank_form, bar, litres, time_to_fs, share_form
+    form = DiveForm()
     if form.validate_on_submit():
         depth = form.depth.data
         gas_switch = int(form.gas.data)
@@ -22,13 +31,13 @@ def minimum_gas():
             return render_template('min_gas.html', form=form)
         solve = form.solve.data
         #print(depth, gas_switch)
-        plan = min_gas_plan(depth, gas_switch, solve)
-        time_to_fs = plan[1].get_time() - solve   #time need from depth to first stop
-        print(plan)
-        litres = min_gas_litres(plan)
-        bar = min_gas_bar(litres, 24)
-        tank_form = TankForm(tank=24, min_gas_L = litres)
-        share_form = ShareForm(depth = depth, solve = solve, gas_switch = gas_switch)
+        plan, tank_form, bar, litres, time_to_fs, share_form = create_plan()
+        return render_template('min_gas.html', form=form , plan=plan, tank_form=tank_form, bar=bar, litres=litres, time_to_fs=time_to_fs, share_form = share_form)
+    if (session.get('depth')):  
+        depth = session['depth']
+        solve = session['solve']
+        gas_switch = session['gas_switch']
+        plan, tank_form, bar, litres, time_to_fs, share_form = create_plan()
         return render_template('min_gas.html', form=form , plan=plan, tank_form=tank_form, bar=bar, litres=litres, time_to_fs=time_to_fs, share_form = share_form)
     return render_template('min_gas.html', form=form)
 
@@ -47,8 +56,8 @@ def share():
     gas = int(request.form['gas'])
     hash = get_hash()
     sharelink = ShareLink(depth = depth, gas = gas, solve = solve, hash = hash)
-    #db.session.add(sharelink)
-    #db.session.commit()
+    db.session.add(sharelink)
+    db.session.commit()
     return json.dumps({'hash': hash})
 
 def get_hash():
@@ -61,3 +70,15 @@ def get_hash():
         return ''.join(random.choice(SIMPLE_CHARS) for i in range(length))
     hash = hashlib.sha256(str(get_random_string()).encode('utf-8'))
     return hash.hexdigest()[:length]
+
+
+@main.route('/minimum-gas/<hash>')
+def view_shared_plan(hash):
+    plan = ShareLink.query.filter_by(hash=hash).first_or_404()
+    depth = plan.depth
+    gas_switch = plan.gas
+    solve = plan.solve
+    session['depth'] = depth
+    session['gas_switch'] = gas_switch
+    session['solve'] = solve
+    return redirect(url_for('main.minimum_gas'))

@@ -9,7 +9,7 @@ RUN python -m venv env && \
  env/bin/pip install -r requirements.txt
 
 COPY app app
-#COPY migrations migrations
+COPY migrations migrations
 COPY manage.py config.py boot.sh ./
 
 #ENV FLASK_APP manage.py
