@@ -55,6 +55,14 @@ html,body {
 
 }
 
+.modal-content{
+    top: 100px;
+    background-color: rgba(15, 0, 80, 0.836); 
+    border: 2px solid darkolivegreen;
+    color: yellow; 
+}
+
+
 .w-plan label{
     margin-left: 30px;
 }

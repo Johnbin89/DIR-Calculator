@@ -194,22 +194,30 @@ $(function() {
         });
     });
 });
-
+var shared = false;
 $(function() {
     $('#share_button').click(function() {
-        $.ajax({
-            url: '/share',
-            data: $('form').serialize(),
-            type: 'POST',
-            success: function(response) {
-                var parsed_data = JSON.parse(response);
-                $("#share-link").html(window.location.href + '/' + parsed_data.hash);
-                console.log(response)
-            },
-            error: function(error) {
-                console.log(error);
-            }
-        });
+        console.log(shared)
+        if (shared) {
+          $("#share-link").html(hashed_link);
+        } else {        
+          $.ajax({
+              url: '/share',
+              data: $('form').serialize(),
+              type: 'POST',
+              success: function(response) {
+                  var parsed_data = JSON.parse(response);
+                  var hashed_link = window.location.href + '/' + parsed_data.hash
+                  $("#share-link").html(hashed_link);
+                  shared = true;
+                  console.log(shared)
+                  console.log(response)
+              },
+              error: function(error) {
+                  console.log(error);
+              }
+          });
+        };
     });
 });
 
