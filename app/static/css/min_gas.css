@@ -11,14 +11,20 @@ html,body {
     background-position: top left;
 }
 
+#navname{
+    color:rgb(165, 148, 0);
+    font-weight: 600;
+}
+
+
 .card-title{
-    color: yellow
+    color:rgb(165, 148, 0);
 }
 
 
 .list-group-item {
     background-color: transparent;
-    color: yellow;
+    color: rgb(165, 148, 0);
     font-size: 1.5rem;
 }
 
@@ -35,7 +41,7 @@ html,body {
 }
 
 .dive-details label{
-    color: yellow;
+    color: rgb(165, 148, 0);
 }
 
 .w-plan{
@@ -59,7 +65,7 @@ html,body {
     top: 100px;
     background-color: rgba(15, 0, 80, 0.836); 
     border: 2px solid darkolivegreen;
-    color: yellow; 
+    color: rgb(165, 148, 0);
 }
 
 
@@ -85,7 +91,7 @@ html,body {
 .plan-details p, .plan-details h3{
     padding-right: 20px;
     padding-left: 40px;
-    color: yellow;
+    color: rgb(165, 148, 0);
 }
 
 .plan-details h3 {
@@ -108,14 +114,14 @@ html,body {
 }
 
 .tank-details label{
-    color: yellow;
+    color: rgb(165, 148, 0);
     margin-left: 30px;
 }
 
 .tank-details p, .tank-details h4{
     padding-right: 20px;
     padding-left: 40px;
-    color: yellow;
+    color: rgb(165, 148, 0);
 }
 
 .tank-details h4 {

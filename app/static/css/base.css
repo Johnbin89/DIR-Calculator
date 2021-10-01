@@ -16,3 +16,11 @@ body {
     z-index: 200;
     padding-top: 80px;
 }
+
+.dropdown-menu{
+    border: 2px solid darkolivegreen;
+}
+
+.dropdown-item{
+    color:rgb(165, 148, 0);
+}
