@@ -1,9 +1,8 @@
 {% extends "base.html" %}
+{% set active_page = "Swim as fast as you can!" %}
+{% block title %}Bad luck!{% endblock %}
 
-{% block title %}Flasky - Page Not Found{% endblock %}
-
-{% block page_content %}
-<div class="page-header">
-    <h1>Not Found</h1>
-</div>
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/404.css') }}">
 {% endblock %}
