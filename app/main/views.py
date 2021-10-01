@@ -12,7 +12,8 @@ def index():
 
 
 @main.route('/minimum-gas', methods=['GET', 'POST'])
-def minimum_gas():
+@main.route('/minimum-gas/<hash>')
+def minimum_gas(hash=None):
     def create_plan():
         plan = min_gas_plan(depth, gas_switch, solve)
         time_to_fs = plan[1].get_time() - solve   #time need from depth to first stop
@@ -33,10 +34,11 @@ def minimum_gas():
         #print(depth, gas_switch)
         plan, tank_form, bar, litres, time_to_fs, share_form = create_plan()
         return render_template('min_gas.html', form=form , plan=plan, tank_form=tank_form, bar=bar, litres=litres, time_to_fs=time_to_fs, share_form = share_form)
-    if (session.get('depth')):  
-        depth = session['depth']
-        solve = session['solve']
-        gas_switch = session['gas_switch']
+    if (hash):
+        sharedplan = ShareLink.query.filter_by(hash=hash).first_or_404()  
+        depth = sharedplan.depth
+        gas_switch = sharedplan.gas
+        solve = sharedplan.solve
         plan, tank_form, bar, litres, time_to_fs, share_form = create_plan()
         return render_template('min_gas.html', form=form , plan=plan, tank_form=tank_form, bar=bar, litres=litres, time_to_fs=time_to_fs, share_form = share_form)
     return render_template('min_gas.html', form=form)
@@ -70,15 +72,3 @@ def get_hash():
         return ''.join(random.choice(SIMPLE_CHARS) for i in range(length))
     hash = hashlib.sha256(str(get_random_string()).encode('utf-8'))
     return hash.hexdigest()[:length]
-
-
-@main.route('/minimum-gas/<hash>')
-def view_shared_plan(hash):
-    plan = ShareLink.query.filter_by(hash=hash).first_or_404()
-    depth = plan.depth
-    gas_switch = plan.gas
-    solve = plan.solve
-    session['depth'] = depth
-    session['gas_switch'] = gas_switch
-    session['solve'] = solve
-    return redirect(url_for('main.minimum_gas'))

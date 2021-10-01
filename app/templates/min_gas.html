@@ -207,7 +207,7 @@ $(function() {
               type: 'POST',
               success: function(response) {
                   var parsed_data = JSON.parse(response);
-                  var hashed_link = window.location.href + '/' + parsed_data.hash
+                  var hashed_link = (window.location.href + '/' + parsed_data.hash).replaceAll('#','')
                   $("#share-link").html(hashed_link);
                   shared = true;
                   console.log(shared)
