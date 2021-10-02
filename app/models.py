@@ -1,5 +1,6 @@
+from enum import unique
 from . import db
-#from sqlalchemy import func, DateTime
+from sqlalchemy import func ,DateTime
 
 class ShareLink(db.Model):
     __tablename__ = 'sharelink'
@@ -7,7 +8,8 @@ class ShareLink(db.Model):
     depth = db.Column(db.Integer)
     gas = db.Column(db.Integer)
     solve = db.Column(db.Integer)
-    hash = db.Column(db.String(6))
+    hash = db.Column(db.String(6), unique=True, index=True)
+    created =  db.Column(db.DateTime(timezone=True), server_default=func.now())
 
 
 '''

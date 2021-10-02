@@ -22,5 +22,16 @@ def test():
     tests = unittest.TestLoader().discover('tests')
     unittest.TextTestRunner(verbosity=2).run(tests)
 
+@manager.command
+def expired_links():
+    import datetime
+    """Check for expired shared links"""
+    links = ShareLink.query.all()
+    for link in links:
+        if datetime.datetime.now() - link.created > datetime.timedelta(minutes=2):
+            db.session.delete(link)
+        db.session.commit()
+
+
 if __name__ == "__main__":
     manager.run()
