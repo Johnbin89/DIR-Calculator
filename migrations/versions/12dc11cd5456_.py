@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: bd03f2d3a749
+Revision ID: 12dc11cd5456
 Revises: 
-Create Date: 2021-10-02 17:49:36.876659
+Create Date: 2021-10-02 20:32:22.699274
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'bd03f2d3a749'
+revision = '12dc11cd5456'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,7 +24,7 @@ def upgrade():
     sa.Column('gas', sa.Integer(), nullable=True),
     sa.Column('solve', sa.Integer(), nullable=True),
     sa.Column('hash', sa.String(length=6), nullable=True),
-    sa.Column('created', sa.DateTime(timezone=True), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('created', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_sharelink_hash'), 'sharelink', ['hash'], unique=True)
