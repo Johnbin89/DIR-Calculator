@@ -14,7 +14,6 @@ COPY explinks-crontab manage.py config.py boot.sh ./
 
 #ENV FLASK_APP manage.py
 RUN apt-get update && apt-get install -y cron
-RUN chmod 0644 /etc/cron.d/explinks-crontab
 
 #RUN chown -R jbin:jbin ./
 #USER jbin
