@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.10.12
 
 #RUN useradd -ms /bin/bash jbin
 
@@ -12,7 +12,7 @@ COPY app app
 COPY migrations migrations
 COPY explinks-crontab manage.py config.py boot.sh ./
 
-#ENV FLASK_APP manage.py
+ENV FLASK_APP manage.py
 RUN apt-get update && apt-get install -y cron
 
 #RUN chown -R jbin:jbin ./
