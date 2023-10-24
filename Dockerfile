@@ -1,4 +1,4 @@
-FROM python:slim
+FROM python:slim-bookworm
 
 #RUN useradd -ms /bin/bash jbin
 
