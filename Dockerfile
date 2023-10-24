@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:slim
 
 #RUN useradd -ms /bin/bash jbin
 
