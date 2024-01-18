@@ -1,5 +1,5 @@
 from math import ceil
-from .data_structures import StopPair
+from app.minimum_gas.data_structures import StopPair
 
 valid_stops = [stop for stop in range(0, 60, 3)]
 #print(valid_stops)

@@ -1,5 +1,5 @@
 from enum import unique
-from . import db
+from app import db
 from sqlalchemy import func ,DateTime
 
 class ShareLink(db.Model):
