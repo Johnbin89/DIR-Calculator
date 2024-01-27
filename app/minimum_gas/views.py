@@ -1,9 +1,10 @@
 from flask import render_template, session, redirect, url_for, flash, current_app, request, json
 from app.minimum_gas import minimum_gas_bp
-from app import db  
+from app import db, socketio  
 from app.minimum_gas.forms import DiveForm, ShareForm, TankForm
 from app.minimum_gas.diveplan import min_gas_plan, min_gas_litres, min_gas_bar
 from app.models import ShareLink
+from flask_socketio import emit, join_room, leave_room
 
 
 
@@ -36,7 +37,7 @@ def minimum_gas(hash=None):
         gas_switch = sharedplan.gas
         solve = sharedplan.solve
         plan, tank_form, bar, litres, time_to_fs, share_form = create_plan()
-        return render_template('minimum_gas/min_gas.html', form=form , plan=plan, tank_form=tank_form, bar=bar, litres=litres, time_to_fs=time_to_fs, share_form = share_form)
+        return render_template('minimum_gas/min_gas.html', form=form , plan=plan, tank_form=tank_form, bar=bar, litres=litres, time_to_fs=time_to_fs, share_form = share_form, hash=hash)
     return render_template('minimum_gas/min_gas.html', form=form)
 
 
@@ -57,6 +58,20 @@ def share():
     db.session.add(sharelink)
     db.session.commit()
     return json.dumps({'hash': hash})
+
+@socketio.on('join')
+def join(room):
+    print("Join")
+    username=request.sid
+    join_room(room['room'])
+    emit('join', username+" entered the room", to=room['room'])
+
+@socketio.on('leave')
+def leave(room):
+    print("leave")
+    username=request.sid
+    leave_room(room['room'])
+    emit('leave', username+" left the room", to=room['room'])
 
 def get_hash():
     import random

@@ -175,8 +175,27 @@
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <!-- <script src="http://dimplejs.org/dist/dimple.v2.3.0.min.js"></script> -->
 <script src="{{ url_for('static', filename='d3.js') }}"></script>
-<script type=text/javascript>
 
+<script src="https://cdn.socket.io/4.7.4/socket.io.min.js" integrity="sha384-Gr6Lu2Ajx28mzwyVR8CFkULdCU7kMlZ9UthllibdOSo6qAiN+yXNHqtgdTvFXMT4" crossorigin="anonymous"></script>
+{% if hash is defined %}
+<script>
+  var socket = io()
+  socket.emit('join', { room: "{{hash}}"})
+  window.onbeforeunload = function() {
+    socket.emit('leave', { room: "{{hash}}"})
+  }
+  
+
+  socket.on('join', function (message) {
+              console.log("JOIN: "+message)
+          })
+  socket.on('leave', function (message) {
+      console.log("LEAVE: "+message)
+  })
+</script>
+{% endif %}
+
+<script type=text/javascript>
 $(function() {
     $('#update-bar-button').click(function() {
         $.ajax({
@@ -242,6 +261,5 @@ $(function() {
     $("#copied-message").html("");
   });
 });
-
 </script>
 {% endblock %}
