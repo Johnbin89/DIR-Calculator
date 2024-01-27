@@ -6,6 +6,8 @@ Flask-Migrate==4.0.5
 Flask-MySQLdb==1.0.1
 Flask-SQLAlchemy==3.1.1
 Flask-WTF==1.2.1
+eventlet==0.35.0
+Flask-SocketIO==5.3.6
 greenlet==3.0.0
 gunicorn==21.2.0
 importlib-resources==6.1.0
