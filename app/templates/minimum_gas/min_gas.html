@@ -31,6 +31,11 @@
   </form>
 </div>
 <div class='dive-details share'>
+  {% if hash is defined %}
+    <div class="w-100 offset-sm-4" >
+      <button type="button" class="btn btn-info"><i class="mr-sm-2" data-feather="users"></i><span id="total_participants"></span></button>
+    </div>
+  {% else %}
   <form action="/share" method="POST" role='form'>
     {{ share_form.csrf_token }}
     <p id="depth-field"> {{ share_form.depth }}</p>
@@ -38,6 +43,7 @@
     <p id="gas-field"> {{ share_form.gas }}</p>
     {{ share_button() }}
   </form>
+  {% endif %}
 </div>
 <div class="plan-details">
   <h3>Ascent Plan:</h3>
@@ -179,6 +185,7 @@
 <script src="https://cdn.socket.io/4.7.4/socket.io.min.js" integrity="sha384-Gr6Lu2Ajx28mzwyVR8CFkULdCU7kMlZ9UthllibdOSo6qAiN+yXNHqtgdTvFXMT4" crossorigin="anonymous"></script>
 {% if hash is defined %}
 <script>
+  feather.replace()
   var socket = io()
   socket.emit('join', { room: "{{hash}}"})
   window.onbeforeunload = function() {
@@ -186,10 +193,12 @@
   }
   
 
-  socket.on('join', function (message) {
+  socket.on('join', function (message, total_participants) {
+              document.getElementById("total_participants").innerHTML = total_participants
               console.log("JOIN: "+message)
           })
-  socket.on('leave', function (message) {
+  socket.on('leave', function (message, total_participants) {
+      document.getElementById("total_participants").innerHTML = total_participants
       console.log("LEAVE: "+message)
   })
 </script>

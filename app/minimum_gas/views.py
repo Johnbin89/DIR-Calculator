@@ -64,14 +64,22 @@ def join(room):
     print("Join")
     username=request.sid
     join_room(room['room'])
-    emit('join', username+" entered the room", to=room['room'])
+    module_socketio = current_app.extensions['socketio']
+    participants_generator = module_socketio.server.manager.get_participants(request.namespace ,room['room'])
+    participants = [a for a,b in participants_generator]
+    #print(participants, len(participants))
+    emit('join', (username+" entered the room", len(participants)-1), to=room['room'])
 
 @socketio.on('leave')
 def leave(room):
     print("leave")
     username=request.sid
     leave_room(room['room'])
-    emit('leave', username+" left the room", to=room['room'])
+    module_socketio = current_app.extensions['socketio']
+    participants_generator = module_socketio.server.manager.get_participants(request.namespace ,room['room'])
+    participants = [a for a,b in participants_generator]
+    #print(participants, len(participants))
+    emit('leave', (username+" left the room", len(participants)-1), to=room['room'])
 
 def get_hash():
     import random
