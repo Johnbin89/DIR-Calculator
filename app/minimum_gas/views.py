@@ -37,6 +37,7 @@ def minimum_gas(hash=None):
         gas_switch = sharedplan.gas
         solve = sharedplan.solve
         plan, tank_form, bar, litres, time_to_fs, share_form = create_plan()
+        flash('Share link generated. Click Users icon to copy.', 'info')
         return render_template('minimum_gas/min_gas.html', form=form , plan=plan, tank_form=tank_form, bar=bar, litres=litres, time_to_fs=time_to_fs, share_form = share_form, hash=hash)
     return render_template('minimum_gas/min_gas.html', form=form)
 

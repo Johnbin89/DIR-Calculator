@@ -33,7 +33,7 @@
 <div class='dive-details share'>
   {% if hash is defined %}
     <div class="w-100 offset-sm-4" >
-      <button type="button" class="btn btn-info"><i class="mr-sm-2" data-feather="users"></i><span id="total_participants"></span></button>
+      <button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-info"><i class="mr-sm-2" data-feather="users"></i><span id="total_participants"></span></button>
     </div>
   {% else %}
   <form action="/share" method="POST" role='form'>
@@ -186,6 +186,7 @@
 {% if hash is defined %}
 <script>
   feather.replace()
+  $("#share-link").html(window.location.href);
   var socket = io()
   socket.emit('join', { room: "{{hash}}"})
   window.onbeforeunload = function() {
@@ -240,6 +241,7 @@ $(function() {
                   shared = true;
                   console.log(shared)
                   console.log(response)
+                  window.location.href = hashed_link
               },
               error: function(error) {
                   console.log(error);
