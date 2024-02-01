@@ -11,15 +11,6 @@ from flask_socketio import emit, join_room, leave_room
 @minimum_gas_bp.route('/minimum-gas', methods=['GET', 'POST'])
 @minimum_gas_bp.route('/minimum-gas/<hash>')
 def minimum_gas(hash=None):
-    def create_plan():
-        plan = min_gas_plan(depth, gas_switch, solve)
-        time_to_fs = plan[1].get_time() - solve   #time need from depth to first stop
-        print(plan)
-        litres = min_gas_litres(plan)
-        bar = min_gas_bar(litres, 24)
-        tank_form = TankForm(tank=24, min_gas_L = litres)
-        share_form = ShareForm(depth = depth, solve = solve, gas_switch = gas_switch)
-        return plan,tank_form, bar, litres, time_to_fs, share_form
     form = DiveForm()
     if form.validate_on_submit():
         depth = form.depth.data
@@ -32,14 +23,14 @@ def minimum_gas(hash=None):
             return render_template('minimum_gas/min_gas.html', form=form)
         solve = form.solve.data
         #print(depth, gas_switch)
-        plan, tank_form, bar, litres, time_to_fs, share_form = create_plan()
+        plan, tank_form, bar, litres, time_to_fs, share_form = create_plan(depth, gas_switch, solve)
         return render_template('minimum_gas/min_gas.html', form=form , plan=plan, tank_form=tank_form, bar=bar, litres=litres, time_to_fs=time_to_fs, share_form = share_form)
     if (hash):
         sharedplan = ShareLink.query.filter_by(hash=hash).first_or_404()  
         depth = sharedplan.depth
         gas_switch = sharedplan.gas
         solve = sharedplan.solve
-        plan, tank_form, bar, litres, time_to_fs, share_form = create_plan()
+        plan, tank_form, bar, litres, time_to_fs, share_form = create_plan(depth, gas_switch, solve)
         flash('Share link generated. Click Users icon to copy.', 'info')
         return render_template('minimum_gas/min_gas.html', form=form , plan=plan, tank_form=tank_form, bar=bar, litres=litres, time_to_fs=time_to_fs, share_form = share_form, hash=hash)
     return render_template('minimum_gas/min_gas.html', form=form)
@@ -104,3 +95,13 @@ def get_hash():
         return ''.join(random.choice(SIMPLE_CHARS) for i in range(length))
     hash = hashlib.sha256(str(get_random_string()).encode('utf-8'))
     return hash.hexdigest()[:length]
+
+def create_plan(depth, gas_switch, solve):
+    plan = min_gas_plan(depth, gas_switch, solve)
+    time_to_fs = plan[1].get_time() - solve   #time need from depth to first stop
+    #print(plan)
+    litres = min_gas_litres(plan)
+    bar = min_gas_bar(litres, 24)
+    tank_form = TankForm(tank=24, min_gas_L = litres)
+    share_form = ShareForm(depth = depth, solve = solve, gas_switch = gas_switch)
+    return plan,tank_form, bar, litres, time_to_fs, share_form
