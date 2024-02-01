@@ -1,4 +1,4 @@
-from flask import render_template, session, redirect, url_for, flash, current_app, request, json
+from flask import render_template, session, redirect, url_for, flash, current_app, request
 from app.minimum_gas import minimum_gas_bp
 from app import db, socketio  
 from app.minimum_gas.forms import DiveForm, ShareForm, TankForm
@@ -50,7 +50,7 @@ def gas_used():
     selected_tank =  int(request.form['tank'])
     litres = int(request.form['min_gas_L'])
     bar = min_gas_bar(litres, selected_tank)
-    return json.dumps({'bar':bar, 'selected_tank': selected_tank})
+    return {'bar':bar, 'selected_tank': selected_tank}
 
 @socketio.on('shared_tank_change')
 def shared_tank_change(data):
@@ -70,7 +70,7 @@ def share():
     sharelink = ShareLink(depth = depth, gas = gas, solve = solve, hash = hash)
     db.session.add(sharelink)
     db.session.commit()
-    return json.dumps({'hash': hash})
+    return {'hash': hash}
 
 @socketio.on('join')
 def join(room):

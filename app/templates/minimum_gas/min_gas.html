@@ -223,8 +223,8 @@
               data: $('form').serialize(),
               type: 'POST',
               success: function(response) {
-                  var parsed_data = JSON.parse(response);
-                  $("#bar-field").html(parsed_data.bar + " bar");
+                  //var parsed_data = JSON.parse(response);
+                  $("#bar-field").html(response.bar + " bar");
                   console.log(response);
               },
               error: function(error) {
@@ -250,8 +250,8 @@ $(function() {
               data: $('form').serialize(),
               type: 'POST',
               success: function(response) {
-                  var parsed_data = JSON.parse(response);
-                  var hashed_link = (window.location.href + '/' + parsed_data.hash).replaceAll('#','')
+                  //var parsed_data = JSON.parse(response);
+                  var hashed_link = (window.location.href + '/' + response.hash).replaceAll('#','')
                   $("#share-link").html(hashed_link);
                   shared = true;
                   console.log(shared)
