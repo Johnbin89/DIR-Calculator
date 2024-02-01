@@ -24,6 +24,9 @@ def minimum_gas(hash=None):
     if form.validate_on_submit():
         depth = form.depth.data
         gas_switch = int(form.gas.data)
+        if depth > 70:
+            flash('That deep with available just a 50% is not wise')
+            return render_template('minimum_gas/min_gas.html', form=form)
         if gas_switch == 0 and depth > 30:
             flash('Better take a stage, if you want to go below 30 meters.')
             return render_template('minimum_gas/min_gas.html', form=form)
@@ -47,7 +50,7 @@ def gas_used():
     selected_tank =  int(request.form['tank'])
     litres = int(request.form['min_gas_L'])
     bar = min_gas_bar(litres, selected_tank)
-    return json.dumps({'bar':bar})
+    return json.dumps({'bar':bar, 'selected_tank': selected_tank})
 
 @minimum_gas_bp.route('/share', methods=['POST'])
 def share():
