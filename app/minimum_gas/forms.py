@@ -13,8 +13,8 @@ class DiveForm(FlaskForm):
     submit = SubmitField('Dive!')
 
 class TankForm(FlaskForm):
-    tank = SelectField(u'Tank', choices=[('14', 'D7'), ('17', 'D8.5'), ('20', 'D10'), ('24', 'D12'), ('30', 'D15')])
-    min_gas_L = HiddenField()
+    tank = SelectField(u'Tank', choices=[('14', 'D7'), ('17', 'D8.5'), ('20', 'D10'), ('24', 'D12'), ('30', 'D15')], id='selected_tank')
+    min_gas_L = HiddenField(id='min_gas_l')
 
 class ShareForm(FlaskForm):
     depth = HiddenField()

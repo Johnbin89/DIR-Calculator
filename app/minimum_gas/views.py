@@ -52,6 +52,15 @@ def gas_used():
     bar = min_gas_bar(litres, selected_tank)
     return json.dumps({'bar':bar, 'selected_tank': selected_tank})
 
+@socketio.on('shared_tank_change')
+def shared_tank_change(data):
+    print("Tank change event")
+    selected_tank =  int(data['selected_tank'])
+    litres = int(data['min_gas_l'])
+    bar = min_gas_bar(litres, selected_tank)
+    emit('shared_tank_change', ({'bar':bar, 'selected_tank': selected_tank}), to=data['room'])
+
+
 @minimum_gas_bp.route('/share', methods=['POST'])
 def share():
     depth = int(request.form['depth'])

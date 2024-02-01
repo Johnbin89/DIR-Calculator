@@ -56,9 +56,9 @@
     <p> {{ plan[-1].get_depth() }}m: 1' gas switch</p>
   </div>
 </div>
-<div class="tank-details">
+<div class="tank-details" id="tank-details">
   <h4>Minimum Gas: {{ litres }} L</h4>
-  <form action="/gas_used" method="POST" role="form">
+  <form action="/gas_used" method="POST" role="form" id="tank_form">
     {{ tank_form.csrf_token }}
     <p id="litres-field"> {{ tank_form.min_gas_L }}</p>
     <br>
@@ -202,27 +202,42 @@
       document.getElementById("total_participants").innerHTML = total_participants
       console.log("LEAVE: "+message)
   })
+  socket.on('shared_tank_change', function (data) {
+      //console.log("Share tank data: "+data.bar)
+      $("#bar-field").html(data.bar + " bar");
+      $('#selected_tank').val(data.selected_tank)
+      document.getElementById("tank-details").style.animationPlayState = "running";
+  })
+
+  $('#update-bar-button').click(function(event) {
+      socket.emit('shared_tank_change', {room: "{{hash}}", min_gas_l: $('#min_gas_l').val(), selected_tank: $('#selected_tank').val()});
+      return false;
+  });
 </script>
+{% else %}
+<script type=text/javascript>
+  $(function() {
+      $('#update-bar-button').click(function() {
+          $.ajax({
+              url: '/gas_used',
+              data: $('form').serialize(),
+              type: 'POST',
+              success: function(response) {
+                  var parsed_data = JSON.parse(response);
+                  $("#bar-field").html(parsed_data.bar + " bar");
+                  console.log(response);
+              },
+              error: function(error) {
+                  console.log(error);
+              }
+          });
+      });
+  });
+  </script>
 {% endif %}
 
+
 <script type=text/javascript>
-$(function() {
-    $('#update-bar-button').click(function() {
-        $.ajax({
-            url: '/gas_used',
-            data: $('form').serialize(),
-            type: 'POST',
-            success: function(response) {
-                var parsed_data = JSON.parse(response);
-                $("#bar-field").html(parsed_data.bar + " bar");
-                console.log(response);
-            },
-            error: function(error) {
-                console.log(error);
-            }
-        });
-    });
-});
 var shared = false;
 $(function() {
     $('#share_button').click(function() {
