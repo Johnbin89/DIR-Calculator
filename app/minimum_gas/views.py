@@ -1,6 +1,6 @@
 from flask import render_template, session, redirect, url_for, flash, current_app, request
 from app.minimum_gas import minimum_gas_bp
-from app import db, socketio  
+from app import db, socketio
 from app.minimum_gas.forms import DiveForm, ShareForm, TankForm
 from app.minimum_gas.diveplan import min_gas_plan, min_gas_litres, min_gas_bar
 from app.models import ShareLink
@@ -26,7 +26,8 @@ def minimum_gas(hash=None):
         plan, tank_form, bar, litres, time_to_fs, share_form = create_plan(depth, gas_switch, solve)
         return render_template('minimum_gas/min_gas.html', form=form , plan=plan, tank_form=tank_form, bar=bar, litres=litres, time_to_fs=time_to_fs, share_form = share_form)
     if (hash):
-        sharedplan = ShareLink.query.filter_by(hash=hash).first_or_404()  
+        sharedplan = ShareLink.query.filter_by(hash=hash).first_or_404()
+        #sharedplan = db.session.scalars(db.select(ShareLink).filter_by(hash=hash)).first() #SQLAlchemy 2.0 
         depth = sharedplan.depth
         gas_switch = sharedplan.gas
         solve = sharedplan.solve
