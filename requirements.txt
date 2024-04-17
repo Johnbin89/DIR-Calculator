@@ -9,7 +9,7 @@ Flask-WTF==1.2.1
 eventlet==0.35.2
 Flask-SocketIO==5.3.6
 greenlet==3.0.0
-gunicorn==21.2.0
+gunicorn==22.0.0
 importlib-resources==6.1.0
 isort==5.12.0
 itsdangerous==2.1.2
