@@ -6,8 +6,7 @@ WORKDIR /home/jbin
 RUN apt-get update && apt-get install -y cron
 
 COPY requirements.txt requirements.txt
-RUN python -m venv env && \
- env/bin/pip install -r requirements.txt
+RUN pip install -r requirements.txt
 
 COPY app app
 COPY migrations migrations
