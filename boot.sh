@@ -1,5 +1,4 @@
 #!/bin/bash
-env > /cron_envs/.cronenv
 flask db upgrade
 service cron start
 crontab explinks-crontab

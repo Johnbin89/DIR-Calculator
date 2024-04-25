@@ -21,4 +21,4 @@
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
 # m h  dom mon dow   command
-0-59/2 * * * * . .loaded_env && cd /home/jbin  && flask delete_shared >>scheduled.log 2>&1
+0-59/2 * * * * root su -l -c cd /home/jbin  && flask delete_shared >>scheduled.log 2>&1
