@@ -19,13 +19,19 @@ def test():
     tests = unittest.TestLoader().discover('tests')
     unittest.TextTestRunner(verbosity=2).run(tests)
 
-@app.cli.command()
+@app.cli.command('delete_shared')
 def expired_links():
     import datetime
     """Check for expired shared links"""
-    links = ShareLink.query.all()
+    current_time = datetime.datetime.now()
+    print(f'Current Time: {current_time}')
+    last_day = current_time - datetime.timedelta(hours=24)
+    print(f'Last day: {last_day}')
+    #get links before last 24 hours.
+    links = ShareLink.query.filter(ShareLink.created < last_day).all()
+    print(len(links))
     for link in links:
-        if datetime.datetime.now() - link.created > datetime.timedelta(minutes=2):
-            db.session.delete(link)
-        db.session.commit()
+        print(link.created)
+        db.session.delete(link)
+    db.session.commit()
 
