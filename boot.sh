@@ -1,4 +1,5 @@
 #!/bin/bash
+printenv > /etc/environment
 source env/bin/activate
 flask db upgrade
 service cron start
