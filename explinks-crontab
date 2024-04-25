@@ -21,4 +21,4 @@
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
 # m h  dom mon dow   command
-52 11 * * * cd /home/jbin  && env/bin/flask delete_shared >>scheduled.log 2>&1
+02 12 * * * cd /home/jbin  && env/bin/flask delete_shared >>scheduled.log 2>&1
