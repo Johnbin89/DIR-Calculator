@@ -1,4 +1,5 @@
 #!/bin/bash
+printenv | sed 's/^\(.*\)$/\1/g' > .cronenvs
 flask db upgrade
 service cron start
 crontab explinks-crontab
