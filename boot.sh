@@ -1,5 +1,5 @@
 #!/bin/bash
-printenv > /etc/environment
+eval $(printenv | awk -F= '{print "export " $1"=""""$2""" }' >> /etc/environments.sh)
 flask db upgrade
 service cron start
 crontab explinks-crontab

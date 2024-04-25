@@ -10,12 +10,13 @@ RUN pip install -r requirements.txt
 
 COPY app app
 COPY migrations migrations
-COPY explinks-crontab manage.py config.py boot.sh .flaskenv ./
+COPY explinks-crontab manage.py config.py boot.sh .flaskenv cron_flask.sh ./
 
 RUN chmod +x boot.sh
+RUN chmod +x cron_flask.sh
 ENV FLASK_APP manage.py
 
-#RUN chown -R jbin:jbin ./
+#RUN chown -R jbin:jbin .
 #USER jbin
 
 EXPOSE 5000

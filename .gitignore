@@ -45,3 +45,6 @@ env
 
 #VS code
 .vscode/
+
+#temp ignore fly.toml
+fly.toml
