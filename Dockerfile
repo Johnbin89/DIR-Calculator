@@ -11,7 +11,7 @@ RUN python -m venv env && \
 
 COPY app app
 COPY migrations migrations
-COPY explinks-crontab manage.py config.py boot.sh ./
+COPY explinks-crontab manage.py config.py boot.sh .flaskenv ./
 
 RUN chmod +x boot.sh
 ENV FLASK_APP manage.py
