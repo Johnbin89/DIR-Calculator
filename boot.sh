@@ -1,5 +1,5 @@
 #!/bin/bash
-eval $(printenv | awk -F= '{print "export " "\""$1"\"""=""\""$2"\"" }' >> /etc/profile)
+eval $(printenv | awk -F= '{print "export " "\""$1"\"""=""\""$2"\"" }' >> /.loaded_env)
 flask db upgrade
 service cron start
 crontab explinks-crontab
