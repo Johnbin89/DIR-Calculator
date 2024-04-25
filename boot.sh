@@ -1,5 +1,5 @@
 #!/bin/bash
-printenv | grep -v "no_proxy" >> /etc/environment
+eval $(printenv | awk -F= '{print "export " "\""$1"\"""=""\""$2"\"" }' >> /etc/profile)
 flask db upgrade
 service cron start
 crontab explinks-crontab
