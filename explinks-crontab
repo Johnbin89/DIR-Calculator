@@ -20,5 +20,5 @@
 # 
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
-# m h  dom mon dow   commandBASH_ENV=/etc/profile bash -c "printenv > /tmp/print_envs_result"
-0-59/2 * * * * cd /home/jbin  && flask delete_shared >>scheduled.log 2>&1
+# m h  dom mon dow   command
+0 8 * * * cd /home/jbin  && flask delete_shared
