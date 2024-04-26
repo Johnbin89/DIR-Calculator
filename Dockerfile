@@ -1,9 +1,9 @@
-FROM python:3.10
+FROM python:3.10-slim
 
 #RUN useradd -ms /bin/bash jbin
 
 WORKDIR /home/jbin
-RUN apt-get update && apt-get install -y cron
+RUN apt-get update && apt-get install -y cron python3-dev default-libmysqlclient-dev build-essential pkg-config
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
