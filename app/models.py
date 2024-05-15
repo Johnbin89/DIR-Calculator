@@ -12,7 +12,7 @@ class ShareLink(db.Model):
     hash: so.Mapped[str] = so.mapped_column(sa.String(6), index=True,
                                              unique=True)
     created: so.Mapped[datetime] = so.mapped_column(
-        index=True, default=lambda: sa.func.now())
+        index=True, default=sa.func.now())
 
 
 '''
