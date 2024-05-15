@@ -1,15 +1,18 @@
-from enum import unique
 from app import db
-from sqlalchemy import func ,DateTime
+import sqlalchemy as sa
+import sqlalchemy.orm as so
+from datetime import datetime, timezone
 
 class ShareLink(db.Model):
     __tablename__ = 'sharelink'
-    id = db.Column(db.Integer, primary_key=True)
-    depth = db.Column(db.Integer)
-    gas = db.Column(db.Integer)
-    solve = db.Column(db.Integer)
-    hash = db.Column(db.String(6), unique=True, index=True)
-    created =  db.Column(db.DateTime(timezone=True), server_default=func.now())
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    depth: so.Mapped[int]
+    gas: so.Mapped[int]
+    solve: so.Mapped[int]
+    hash: so.Mapped[str] = so.mapped_column(sa.String(6), index=True,
+                                             unique=True)
+    created: so.Mapped[datetime] = so.mapped_column(
+        index=True, default=lambda: sa.func.now())
 
 
 '''
