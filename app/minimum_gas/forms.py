@@ -1,14 +1,18 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, IntegerField, SelectField, HiddenField
-from wtforms.validators import DataRequired
+from wtforms.validators import InputRequired, ValidationError
 
-class NameForm(FlaskForm):
-    name = StringField('What is your name?', validators=[DataRequired()])
-    submit = SubmitField('Submit')
+def check_positive(form, field):
+    if field.data <= 0:
+        raise ValidationError('Provide positive integer')
 
+def solve_time_1(form, field):
+    if field.data < 1:
+        raise ValidationError("Less than a minute to handle Out-Of-Gas? I don't think so!")
+    
 class DiveForm(FlaskForm):
-    depth = IntegerField('Depth', validators=[DataRequired()])
-    solve = IntegerField('Solving time', validators=[DataRequired()], default=1)
+    depth = IntegerField('Depth', validators=[InputRequired(), check_positive])
+    solve = IntegerField('Solving time', validators=[InputRequired(), solve_time_1], default=1)
     gas = SelectField(u'Gas Switch', choices=[('21', '21m - 50%'), ('6', 'Oxygen'), ('0', 'Surface')])
     submit = SubmitField('Dive!')
 

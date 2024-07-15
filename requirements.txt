@@ -28,5 +28,5 @@ SQLAlchemy==2.0.21
 typed-ast==1.5.5
 Werkzeug==3.0.3
 wrapt==1.15.0
-WTForms==3.0.1
+WTForms==3.1.2
 zipp==3.19.1
