@@ -37,7 +37,8 @@ def minimum_gas(hash=None):
     return render_template('minimum_gas/min_gas.html', form=form)
 
 
-@minimum_gas_bp.route('/gas_used', methods=['POST'])
+#@minimum_gas_bp.route('/gas_used', methods=['POST'])
+@minimum_gas_bp.post('/gas_used') #bp.post (e.g get,put,post)added in Flask 2.0
 def gas_used():
     selected_tank =  int(request.form['tank'])
     litres = int(request.form['min_gas_L'])
