@@ -8,7 +8,7 @@ def check_positive(form, field):
 
 def solve_time_1(form, field):
     if field.data < 1:
-        raise ValidationError("Less than a minute to handle Out-Of-Gas? I don't think so!")
+        raise ValidationError("Less than a minute to handle Out-Of-Gas?")
     
 class DiveForm(FlaskForm):
     depth = IntegerField('Depth', validators=[InputRequired(), check_positive])

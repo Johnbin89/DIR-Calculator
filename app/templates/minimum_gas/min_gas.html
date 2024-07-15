@@ -135,7 +135,7 @@
         <h3 class="card-title">Plan settings</h3>
       </div>
       <div class="card-body">
-        <form action="/minimum-gas" method="POST">
+        <form action="/minimum-gas" method="POST" novalidate>
           {{ form.csrf_token }}
           <br>
           {{ render_field(form.depth, placeholder='Max. depth', pattern="[0-9]{1,10}",
