@@ -1,7 +1,7 @@
 from app import db
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from datetime import datetime, timezone
+from datetime import datetime
 
 class ShareLink(db.Model):
     __tablename__ = 'sharelink'
