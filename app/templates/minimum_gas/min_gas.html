@@ -25,7 +25,11 @@
     {{ render_field(form.gas) }}
     <div class="form-group row">
       <div class="col-sm-10 offset-sm-4" >
+        {% if hash is defined %}
+        <a href="#" id="update-plan"><button class="btn btn-primary" type="button" id='update-plan-button'>Dive!</button></a>
+        {% else %}
         {{ form.submit(class="btn btn-primary") }}
+        {% endif %}
       </div>
     </div>
   </form>
@@ -57,7 +61,7 @@
   </div>
 </div>
 <div class="tank-details" id="tank-details">
-  <h4>Minimum Gas: {{ litres }} L</h4>
+  <h4>Minimum Gas: <span id="min_gas_litres">{{ litres }}</span> L</h4>
   <form action="/gas_used" method="POST" role="form" id="tank_form">
     {{ tank_form.csrf_token }}
     <p id="litres-field"> {{ tank_form.min_gas_L }}</p>
@@ -203,14 +207,38 @@
       console.log("LEAVE: "+message)
   })
   socket.on('shared_tank_change', function (data) {
-      //console.log("Share tank data: "+data.bar)
+      //console.log("Share tank data: ")
+      //console.log(data)
       $("#bar-field").html(data.bar + " bar");
       $('#selected_tank').val(data.selected_tank)
       document.getElementById("tank-details").style.animationPlayState = "running";
   })
 
+  socket.on('plan_change', function (data) {
+      //console.log("New plan data: ")
+      //console.log(data)
+      $('#selected_tank').val(data.selected_tank)
+      $('#depth').val(data.depth)
+      $('#gas').val(data.gas)
+      $('#solve').val(data.solve)
+      $('#min_gas_litres').html(data.litres)
+      $('#min_gas_l').val(data.litres) //for TankForm HiddenField to keep litres
+      $("#bar-field").html(data.bar + " bar");
+      dataset_first_stop = [{depth: data.new_plan[0].depth,
+                  time: 0
+      }]
+      dataset = dataset_first_stop.concat(data.new_plan)
+      document.querySelector(".d3line").innerHTML = ""
+      create_d3(dataset)
+  })
+
   $('#update-bar-button').click(function(event) {
       socket.emit('shared_tank_change', {room: "{{hash}}", min_gas_l: $('#min_gas_l').val(), selected_tank: $('#selected_tank').val()});
+      return false;
+  });
+
+  $('#update-plan-button').click(function(event) {
+      socket.emit('plan_change', {room: "{{hash}}", new_depth: $('#depth').val(),  new_gas: $('#gas').val(), new_solve_time: $('#solve').val(), selected_tank: $('#selected_tank').val()});
       return false;
   });
 </script>

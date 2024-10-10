@@ -8,3 +8,6 @@ class StopPair():
 
     def get_time(self):
         return self.time
+    
+    def to_dict(self):
+        return {'depth': self.get_depth(), 'time': self.get_time()}

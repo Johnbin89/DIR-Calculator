@@ -32,8 +32,11 @@ def minimum_gas(hash=None):
         gas_switch = sharedplan.gas
         solve = sharedplan.solve
         plan, tank_form, bar, litres, time_to_fs, share_form = create_plan(depth, gas_switch, solve)
+        form.depth.data = depth
+        form.gas.data = gas_switch
+        form.solve.data = solve
         flash('Share link generated. Click Users icon to copy.', 'info')
-        return render_template('minimum_gas/min_gas.html', form=form , plan=plan, tank_form=tank_form, bar=bar, litres=litres, time_to_fs=time_to_fs, share_form = share_form, hash=hash)
+        return render_template('minimum_gas/min_gas.html', form=form, depth=depth, gas_switch=gas_switch, solve=solve , plan=plan, tank_form=tank_form, bar=bar, litres=litres, time_to_fs=time_to_fs, share_form = share_form, hash=hash)
     return render_template('minimum_gas/min_gas.html', form=form)
 
 
@@ -47,11 +50,30 @@ def gas_used():
 
 @socketio.on('shared_tank_change')
 def shared_tank_change(data):
-    print("Tank change event")
+    # print(f"Tank change event: {data}")
     selected_tank =  int(data['selected_tank'])
     litres = int(data['min_gas_l'])
     bar = min_gas_bar(litres, selected_tank)
     emit('shared_tank_change', ({'bar':bar, 'selected_tank': selected_tank}), to=data['room'])
+    
+@socketio.on('plan_change')
+def plan_change(data):
+    # print(f"Plan change event: {data}")
+    sharedplan = ShareLink.query.filter_by(hash=data['room']).first_or_404()
+    depth = int(data['new_depth'])
+    gas = int(data['new_gas'])
+    solve = int(data['new_solve_time'])
+    selected_tank =  int(data['selected_tank'])
+    plan, _, bar, litres, time_to_fs, _ = create_plan(depth, gas, solve, selected_tank)
+    sharedplan.depth = depth
+    sharedplan.gas = gas
+    sharedplan.solve = solve
+    db.session.commit()
+    json_plan = [stop.to_dict() for stop in plan]
+    emit('plan_change', ({'depth': data['new_depth'], 'gas': data['new_gas'], 'solve': data['new_solve_time'], 
+                          'bar':bar, 'selected_tank': selected_tank, 
+                          'time_to_fs': time_to_fs, 'new_plan': json_plan, 'litres': litres,}), 
+         to=data['room'])
 
 
 @minimum_gas_bp.route('/share', methods=['POST'])
@@ -98,12 +120,12 @@ def get_hash():
     hash = hashlib.sha256(str(get_random_string()).encode('utf-8'))
     return hash.hexdigest()[:length]
 
-def create_plan(depth, gas_switch, solve):
+def create_plan(depth, gas_switch, solve, tank=24):
     plan = min_gas_plan(depth, gas_switch, solve)
     time_to_fs = plan[1].get_time() - solve   #time need from depth to first stop
     #print(plan)
     litres = min_gas_litres(plan)
-    bar = min_gas_bar(litres, 24)
-    tank_form = TankForm(tank=24, min_gas_L = litres)
+    bar = min_gas_bar(litres, tank)
+    tank_form = TankForm(tank=tank, min_gas_L = litres)
     share_form = ShareForm(depth = depth, solve = solve, gas_switch = gas_switch)
     return plan,tank_form, bar, litres, time_to_fs, share_form
