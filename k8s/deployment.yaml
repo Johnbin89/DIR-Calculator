@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gasmanager
+  namespace: gasmanager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gasmanager
+  template:
+    metadata:
+      labels:
+        app: gasmanager
+    spec:
+      containers:
+        - name: gasmanager
+          image: johnbin89/gasmanager:1.0
+          ports:
+            - containerPort: 5000
+          env:
+            - name: FLASK_CONFIG
+              value: "production"
+          envFrom:
+            - secretRef:
+                name: gasmanager-env
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gasmanager
+  namespace: gasmanager
+spec:
+  selector:
+    app: gasmanager
+  ports:
+    - port: 5000
+      targetPort: 5000
