@@ -22,9 +22,13 @@ logger = logging.getLogger('alembic.env')
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 from flask import current_app
+# NB: str(URL) masks the password as '***' in SQLAlchemy 1.4+, which makes the
+# migration connect with a bogus password. render_as_string(hide_password=False)
+# is the supported way to get the real URL.
 config.set_main_option(
     'sqlalchemy.url',
-    str(current_app.extensions['migrate'].db.engine.url).replace('%', '%%'))
+    current_app.extensions['migrate'].db.engine.url.render_as_string(
+        hide_password=False).replace('%', '%%'))
 target_metadata = current_app.extensions['migrate'].db.metadata
 
 # other values from the config, defined by the needs of env.py,
