@@ -24,6 +24,16 @@ spec:
           envFrom:
             - secretRef:
                 name: gasmanager-env
+          resources:
+            requests:
+              cpu: 25m
+              # Measured: ~75Mi anon + ~7Mi slab. Rest of RSS is
+              # reclaimable page cache.
+              memory: 192Mi
+            limits:
+              # No CPU limit: single eventlet worker, throttling would
+              # directly stall the websocket event loop.
+              memory: 384Mi
 ---
 apiVersion: v1
 kind: Service
