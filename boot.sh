@@ -5,4 +5,4 @@ service cron start
 crontab explinks-crontab
 crontab -l >> loaded.env
 crontab loaded.env
-exec gunicorn -b :5000 --access-logfile - --error-logfile - --worker-class eventlet -w 1 manage:app
+exec gunicorn -b :5000 --access-logfile - --error-logfile - --worker-class gthread -w 1 --threads 50 manage:app
