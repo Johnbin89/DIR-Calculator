@@ -1,11 +1,11 @@
-from flask import render_template, session, redirect, url_for, flash, current_app, request
-from app.minimum_gas import minimum_gas_bp
-from app import db, socketio
-from app.minimum_gas.forms import DiveForm, ShareForm, TankForm
-from app.minimum_gas.diveplan import min_gas_plan, min_gas_litres, min_gas_bar
-from app.models import ShareLink
+from flask import current_app, flash, render_template, request
 from flask_socketio import emit, join_room, leave_room
 
+from app import db, socketio
+from app.minimum_gas import minimum_gas_bp
+from app.minimum_gas.diveplan import min_gas_bar, min_gas_litres, min_gas_plan
+from app.minimum_gas.forms import DiveForm, ShareForm, TankForm
+from app.models import ShareLink
 
 
 @minimum_gas_bp.route('/minimum-gas', methods=['GET', 'POST'])
