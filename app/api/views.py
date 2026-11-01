@@ -12,6 +12,12 @@ from app.planning.validation import (
 )
 
 
+def json_object():
+    """Return the request's JSON object, or {} for any other body so validation rejects it."""
+    data = request.get_json(silent=True)
+    return data if isinstance(data, dict) else {}
+
+
 def plan_response(depth, gas, solve, tank=24):
     plan, bar, litres, time_to_fs = calculate_plan(depth, gas, solve, tank)
     return {
@@ -28,7 +34,7 @@ def plan_response(depth, gas, solve, tank=24):
 
 @api_bp.post('/minimum-gas')
 def minimum_gas():
-    depth, solve, gas, tank, errors = validate_plan_input(request.get_json(silent=True) or {})
+    depth, solve, gas, tank, errors = validate_plan_input(json_object())
     if errors:
         return {'errors': errors}, 422
     warning = plan_warning(depth, gas)
@@ -39,7 +45,7 @@ def minimum_gas():
 
 @api_bp.post('/gas-used')
 def gas_used():
-    data = request.get_json(silent=True) or {}
+    data = json_object()
     errors = {}
     litres = read_int(data, 'litres', errors)
     tank = read_tank(data, 'tank', errors)
@@ -50,7 +56,7 @@ def gas_used():
 
 @api_bp.post('/share')
 def share():
-    depth, solve, gas, tank, errors = validate_plan_input(request.get_json(silent=True) or {})
+    depth, solve, gas, tank, errors = validate_plan_input(json_object())
     if errors:
         return {'errors': errors}, 422
     warning = plan_warning(depth, gas)

@@ -78,6 +78,14 @@ class ApiTestCase(unittest.TestCase):
             self.assertEqual(response.status_code, 422)
             self.assertEqual(set(response.get_json()['errors']), {'tank'})
 
+    def test_non_object_json_body_rejected(self):
+        for path in ('/api/minimum-gas', '/api/gas-used', '/api/share'):
+            for body in ([1, 2, 3], 'text', 5, True, None):
+                with self.subTest(path=path, body=body):
+                    response = self.client.post(path, json=body)
+                    self.assertEqual(response.status_code, 422)
+                    self.assertIn('errors', response.get_json())
+
     def test_share_rejects_plan_with_warning(self):
         response = self.client.post('/api/share', json={'depth': 200, 'solve': 1, 'gas': 21})
         self.assertEqual(response.status_code, 422)
