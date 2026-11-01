@@ -13,7 +13,6 @@ def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
-    socketio.init_app(app)
     db.init_app(app)
     # mysql.init_app(app)
 
@@ -27,6 +26,10 @@ def create_app(config_name):
     app.register_blueprint(errors_blueprint)
     app.register_blueprint(min_gas_blueprint)
     app.register_blueprint(api_blueprint, url_prefix='/api')
+
+    # After the blueprint imports: handlers registered before init_app are kept
+    # for every new server, those registered after it only reach the current one.
+    socketio.init_app(app)
 
     # from .auth import auth as auth_blueprint
     # app.register_blueprint(auth_blueprint, url_prefix='/auth')

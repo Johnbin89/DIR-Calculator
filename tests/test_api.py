@@ -2,8 +2,8 @@ import unittest
 
 from app import create_app, db, socketio
 from app.minimum_gas.forms import DiveForm, TankForm
-from app.minimum_gas.validation import GAS_SWITCHES, TANKS
 from app.models import ShareLink
+from app.planning.validation import GAS_SWITCHES, TANKS
 
 
 class ApiTestCase(unittest.TestCase):

@@ -2,19 +2,18 @@ from flask import request
 
 from app import db
 from app.api import api_bp
-from app.minimum_gas.diveplan import min_gas_bar
-from app.minimum_gas.validation import (
+from app.models import ShareLink, generate_share_hash
+from app.planning.diveplan import calculate_plan, min_gas_bar
+from app.planning.validation import (
     plan_warning,
     read_int,
     read_tank,
     validate_plan_input,
 )
-from app.minimum_gas.views import create_plan, get_hash
-from app.models import ShareLink
 
 
 def plan_response(depth, gas, solve, tank=24):
-    plan, _, bar, litres, time_to_fs, _ = create_plan(depth, gas, solve, tank)
+    plan, bar, litres, time_to_fs = calculate_plan(depth, gas, solve, tank)
     return {
         'depth': depth,
         'gas': gas,
@@ -57,7 +56,7 @@ def share():
     warning = plan_warning(depth, gas)
     if warning:
         return {'warning': warning}, 422
-    hash = get_hash()
+    hash = generate_share_hash()
     db.session.add(ShareLink(depth=depth, gas=gas, solve=solve, hash=hash))
     db.session.commit()
     return {'hash': hash}

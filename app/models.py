@@ -1,3 +1,6 @@
+import hashlib
+import random
+import string
 from datetime import datetime
 
 import sqlalchemy as sa
@@ -14,6 +17,12 @@ class ShareLink(db.Model):
     solve: so.Mapped[int]
     hash: so.Mapped[str] = so.mapped_column(sa.String(6), index=True, unique=True)
     created: so.Mapped[datetime] = so.mapped_column(index=True, default=sa.func.now())
+
+
+def generate_share_hash():
+    length = 6
+    random_string = "".join(random.choice(string.ascii_letters) for _ in range(length))
+    return hashlib.sha256(random_string.encode("utf-8")).hexdigest()[:length]
 
 
 """

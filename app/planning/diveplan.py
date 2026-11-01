@@ -1,6 +1,6 @@
 from math import ceil
 
-from app.minimum_gas.data_structures import StopPair
+from app.planning.data_structures import StopPair
 
 valid_stops = [stop for stop in range(0, 60, 3)]
 # print(valid_stops)
@@ -51,6 +51,14 @@ def min_gas_litres(plan):
 def min_gas_bar(litres, tank_vol):
     bar = litres / tank_vol
     return int(ceil(bar * 0.1) / 0.1)  # rounding to tens place ex. 73.xxx bar -> 80 bar
+
+
+def calculate_plan(depth, gas_switch, solve, tank=24):
+    plan = min_gas_plan(depth, gas_switch, solve)
+    time_to_fs = plan[1].get_time() - solve  # time need from depth to first stop
+    litres = min_gas_litres(plan)
+    bar = min_gas_bar(litres, tank)
+    return plan, bar, litres, time_to_fs
 
 
 """

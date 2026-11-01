@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import HiddenField, IntegerField, SelectChoice, SelectField, SubmitField
 from wtforms.validators import InputRequired, ValidationError
 
-from app.minimum_gas.validation import GAS_SWITCHES, TANKS
+from app.planning.validation import GAS_SWITCHES, TANKS
 
 
 def as_choices(options):

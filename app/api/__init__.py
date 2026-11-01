@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-api_bp = Blueprint('api', __name__)
+api_bp = Blueprint("api", __name__)
 
-from app.api import views
+from app.api import sockets, views  # noqa: F401

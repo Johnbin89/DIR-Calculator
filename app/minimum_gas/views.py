@@ -1,17 +1,16 @@
-from flask import current_app, flash, render_template, request
-from flask_socketio import emit, join_room, leave_room
+from flask import flash, render_template, request
 
-from app import db, socketio
+from app import db
 from app.minimum_gas import minimum_gas_bp
-from app.minimum_gas.diveplan import min_gas_bar, min_gas_litres, min_gas_plan
 from app.minimum_gas.forms import DiveForm, ShareForm, TankForm
-from app.minimum_gas.validation import (
+from app.models import ShareLink, generate_share_hash
+from app.planning.diveplan import calculate_plan, min_gas_bar
+from app.planning.validation import (
     plan_warning,
     read_int,
     read_tank,
     validate_plan_input,
 )
-from app.models import ShareLink
 
 
 @minimum_gas_bp.route('/minimum-gas', methods=['GET', 'POST'])
@@ -55,40 +54,6 @@ def gas_used():
     bar = min_gas_bar(litres, selected_tank)
     return {'bar':bar, 'selected_tank': selected_tank}
 
-@socketio.on('shared_tank_change')
-def shared_tank_change(data):
-    # print(f"Tank change event: {data}")
-    errors = {}
-    selected_tank = read_tank(data, 'selected_tank', errors)
-    litres = read_int(data, 'min_gas_l', errors)
-    if errors:
-        return
-    bar = min_gas_bar(litres, selected_tank)
-    emit('shared_tank_change', ({'bar':bar, 'selected_tank': selected_tank}), to=data['room'])
-    
-@socketio.on('plan_change')
-def plan_change(data):
-    # print(f"Plan change event: {data}")
-    depth, solve, gas, selected_tank, errors = validate_plan_input({
-        'depth': data.get('new_depth'),
-        'solve': data.get('new_solve_time'),
-        'gas': data.get('new_gas'),
-        'tank': data.get('selected_tank'),
-    })
-    if errors or plan_warning(depth, gas):
-        return
-    sharedplan = ShareLink.query.filter_by(hash=data['room']).first_or_404()
-    plan, _, bar, litres, time_to_fs, _ = create_plan(depth, gas, solve, selected_tank)
-    sharedplan.depth = depth
-    sharedplan.gas = gas
-    sharedplan.solve = solve
-    db.session.commit()
-    json_plan = [stop.to_dict() for stop in plan]
-    emit('plan_change', ({'depth': data['new_depth'], 'gas': data['new_gas'], 'solve': data['new_solve_time'], 
-                          'bar':bar, 'selected_tank': selected_tank, 
-                          'time_to_fs': time_to_fs, 'new_plan': json_plan, 'litres': litres,}), 
-         to=data['room'])
-
 
 @minimum_gas_bp.route('/share', methods=['POST'])
 def share():
@@ -98,51 +63,15 @@ def share():
     warning = plan_warning(depth, gas)
     if warning:
         return {'warning': warning}, 422
-    hash = get_hash()
+    hash = generate_share_hash()
     sharelink = ShareLink(depth = depth, gas = gas, solve = solve, hash = hash)
     db.session.add(sharelink)
     db.session.commit()
     return {'hash': hash}
 
-@socketio.on('join')
-def join(room):
-    print("Join")
-    username=request.sid
-    join_room(room['room'])
-    module_socketio = current_app.extensions['socketio']
-    participants_generator = module_socketio.server.manager.get_participants(request.namespace ,room['room'])
-    participants = [a for a,b in participants_generator]
-    #print(participants, len(participants))
-    emit('join', (username+" entered the room", len(participants)-1), to=room['room'])
-
-@socketio.on('leave')
-def leave(room):
-    print("leave")
-    username=request.sid
-    leave_room(room['room'])
-    module_socketio = current_app.extensions['socketio']
-    participants_generator = module_socketio.server.manager.get_participants(request.namespace ,room['room'])
-    participants = [a for a,b in participants_generator]
-    #print(participants, len(participants))
-    emit('leave', (username+" left the room", len(participants)-1), to=room['room'])
-
-def get_hash():
-    import random
-    import string
-    import hashlib
-    length = 6
-    SIMPLE_CHARS = string.ascii_letters
-    def get_random_string():
-        return ''.join(random.choice(SIMPLE_CHARS) for i in range(length))
-    hash = hashlib.sha256(str(get_random_string()).encode('utf-8'))
-    return hash.hexdigest()[:length]
 
 def create_plan(depth, gas_switch, solve, tank=24):
-    plan = min_gas_plan(depth, gas_switch, solve)
-    time_to_fs = plan[1].get_time() - solve   #time need from depth to first stop
-    #print(plan)
-    litres = min_gas_litres(plan)
-    bar = min_gas_bar(litres, tank)
+    plan, bar, litres, time_to_fs = calculate_plan(depth, gas_switch, solve, tank)
     tank_form = TankForm(tank=tank, min_gas_L = litres)
     share_form = ShareForm(depth = depth, solve = solve, gas_switch = gas_switch)
     return plan,tank_form, bar, litres, time_to_fs, share_form
