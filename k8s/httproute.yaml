@@ -7,9 +7,9 @@ spec:
   parentRefs:
     - name: traefik-gateway
       namespace: traefik
-      sectionName: websecure
+      sectionName: dive-calc
   hostnames:
-    - "dir-calc.kube.jbin.me"
+    - "dive-calc.jbin.me"
   rules:
     - matches:
         - path:
