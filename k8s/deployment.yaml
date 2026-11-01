@@ -21,6 +21,8 @@ spec:
           env:
             - name: FLASK_CONFIG
               value: "production"
+            - name: SOCKETIO_ALLOWED_ORIGINS
+              value: "https://dive-calc.jbin.me,https://dir-calc.kube.jbin.me"
           envFrom:
             - secretRef:
                 name: gasmanager-env

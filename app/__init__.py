@@ -29,7 +29,7 @@ def create_app(config_name):
 
     # After the blueprint imports: handlers registered before init_app are kept
     # for every new server, those registered after it only reach the current one.
-    socketio.init_app(app)
+    socketio.init_app(app, cors_allowed_origins=app.config['SOCKETIO_ALLOWED_ORIGINS'])
 
     # from .auth import auth as auth_blueprint
     # app.register_blueprint(auth_blueprint, url_prefix='/auth')
