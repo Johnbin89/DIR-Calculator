@@ -5,6 +5,12 @@ from app import db, socketio
 from app.minimum_gas import minimum_gas_bp
 from app.minimum_gas.diveplan import min_gas_bar, min_gas_litres, min_gas_plan
 from app.minimum_gas.forms import DiveForm, ShareForm, TankForm
+from app.minimum_gas.validation import (
+    plan_warning,
+    read_int,
+    read_tank,
+    validate_plan_input,
+)
 from app.models import ShareLink
 
 
@@ -15,11 +21,9 @@ def minimum_gas(hash=None):
     if form.validate_on_submit():
         depth = form.depth.data
         gas_switch = int(form.gas.data)
-        if depth > 70:
-            flash('That deep with available just a 50% is not wise')
-            return render_template('minimum_gas/min_gas.html', form=form)
-        if gas_switch == 0 and depth > 30:
-            flash('Better take a stage, if you want to go below 30 meters.')
+        warning = plan_warning(depth, gas_switch)
+        if warning:
+            flash(warning)
             return render_template('minimum_gas/min_gas.html', form=form)
         solve = form.solve.data
         #print(depth, gas_switch)
@@ -43,27 +47,37 @@ def minimum_gas(hash=None):
 #@minimum_gas_bp.route('/gas_used', methods=['POST'])
 @minimum_gas_bp.post('/gas_used') #bp.post (e.g get,put,post)added in Flask 2.0
 def gas_used():
-    selected_tank =  int(request.form['tank'])
-    litres = int(request.form['min_gas_L'])
+    errors = {}
+    selected_tank = read_tank(request.form, 'tank', errors)
+    litres = read_int(request.form, 'min_gas_L', errors)
+    if errors:
+        return {'errors': errors}, 422
     bar = min_gas_bar(litres, selected_tank)
     return {'bar':bar, 'selected_tank': selected_tank}
 
 @socketio.on('shared_tank_change')
 def shared_tank_change(data):
     # print(f"Tank change event: {data}")
-    selected_tank =  int(data['selected_tank'])
-    litres = int(data['min_gas_l'])
+    errors = {}
+    selected_tank = read_tank(data, 'selected_tank', errors)
+    litres = read_int(data, 'min_gas_l', errors)
+    if errors:
+        return
     bar = min_gas_bar(litres, selected_tank)
     emit('shared_tank_change', ({'bar':bar, 'selected_tank': selected_tank}), to=data['room'])
     
 @socketio.on('plan_change')
 def plan_change(data):
     # print(f"Plan change event: {data}")
+    depth, solve, gas, selected_tank, errors = validate_plan_input({
+        'depth': data.get('new_depth'),
+        'solve': data.get('new_solve_time'),
+        'gas': data.get('new_gas'),
+        'tank': data.get('selected_tank'),
+    })
+    if errors or plan_warning(depth, gas):
+        return
     sharedplan = ShareLink.query.filter_by(hash=data['room']).first_or_404()
-    depth = int(data['new_depth'])
-    gas = int(data['new_gas'])
-    solve = int(data['new_solve_time'])
-    selected_tank =  int(data['selected_tank'])
     plan, _, bar, litres, time_to_fs, _ = create_plan(depth, gas, solve, selected_tank)
     sharedplan.depth = depth
     sharedplan.gas = gas
@@ -78,9 +92,12 @@ def plan_change(data):
 
 @minimum_gas_bp.route('/share', methods=['POST'])
 def share():
-    depth = int(request.form['depth'])
-    solve = int(request.form['solve'])
-    gas = int(request.form['gas'])
+    depth, solve, gas, _, errors = validate_plan_input(request.form)
+    if errors:
+        return {'errors': errors}, 422
+    warning = plan_warning(depth, gas)
+    if warning:
+        return {'warning': warning}, 422
     hash = get_hash()
     sharelink = ShareLink(depth = depth, gas = gas, solve = solve, hash = hash)
     db.session.add(sharelink)

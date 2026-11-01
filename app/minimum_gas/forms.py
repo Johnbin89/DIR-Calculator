@@ -1,6 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import HiddenField, IntegerField, SelectField, SubmitField
+from wtforms import HiddenField, IntegerField, SelectChoice, SelectField, SubmitField
 from wtforms.validators import InputRequired, ValidationError
+
+from app.minimum_gas.validation import GAS_SWITCHES, TANKS
+
+
+def as_choices(options):
+    return [SelectChoice(str(value), label) for value, label in options.items()]
 
 
 def check_positive(form, field):
@@ -18,24 +24,12 @@ class DiveForm(FlaskForm):
     solve = IntegerField(
         "Solving time", validators=[InputRequired(), solve_time_1], default=1
     )
-    gas = SelectField(
-        "Gas Switch", choices=[("21", "21m - 50%"), ("6", "Oxygen"), ("0", "Surface")]
-    )
+    gas = SelectField("Gas Switch", choices=as_choices(GAS_SWITCHES))
     submit = SubmitField("Dive!")
 
 
 class TankForm(FlaskForm):
-    tank = SelectField(
-        "Tank",
-        choices=[
-            ("14", "D7"),
-            ("17", "D8.5"),
-            ("20", "D10"),
-            ("24", "D12"),
-            ("30", "D15"),
-        ],
-        id="selected_tank",
-    )
+    tank = SelectField("Tank", choices=as_choices(TANKS), id="selected_tank")
     min_gas_L = HiddenField(id="min_gas_l")
 
 
