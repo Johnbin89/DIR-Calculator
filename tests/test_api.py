@@ -1,9 +1,11 @@
 import unittest
+from unittest.mock import patch
 
 from app import create_app, db, socketio
 from app.minimum_gas.forms import DiveForm, TankForm
 from app.models import ShareLink
 from app.planning.validation import GAS_SWITCHES, TANKS
+from config import Config
 
 
 class ApiTestCase(unittest.TestCase):
@@ -96,6 +98,28 @@ class ApiTestCase(unittest.TestCase):
         html = self.client.get('/minimum-gas').get_data(as_text=True)
         self.assertIn('<option', html)
         self.assertIn('21m - 50%', html)
+
+
+class SocketOriginTestCase(unittest.TestCase):
+    HOST = 'dive-calc.jbin.me'
+
+    def handshake(self, allowed_origins, origin):
+        with patch.object(Config, 'SOCKETIO_ALLOWED_ORIGINS', allowed_origins):
+            app = create_app('testing')
+        # Traefik marks WebSocket upgrades as wss; polling hits the same origin check.
+        headers = {'Host': self.HOST, 'Origin': origin, 'X-Forwarded-Proto': 'wss'}
+        return app.test_client().get('/socket.io/?EIO=4&transport=polling', headers=headers).status_code
+
+    def test_default_rejects_https_origin_marked_wss(self):
+        self.assertEqual(self.handshake(None, f'https://{self.HOST}'), 400)
+
+    def test_configured_origin_accepted(self):
+        allowed = [f'https://{self.HOST}']
+        self.assertEqual(self.handshake(allowed, f'https://{self.HOST}'), 200)
+
+    def test_configured_list_rejects_other_origins(self):
+        allowed = [f'https://{self.HOST}']
+        self.assertEqual(self.handshake(allowed, 'https://evil.example'), 400)
 
 
 class SocketValidationTestCase(unittest.TestCase):

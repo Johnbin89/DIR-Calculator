@@ -10,6 +10,10 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
+    # Comma-separated. Needed behind Traefik: it marks WebSocket upgrades as wss, so
+    # Socket.IO's default same-origin check rejects the browser's https:// origin.
+    SOCKETIO_ALLOWED_ORIGINS = os.environ['SOCKETIO_ALLOWED_ORIGINS'].split(',') \
+        if os.environ.get('SOCKETIO_ALLOWED_ORIGINS') else None
 
     @staticmethod
     def init_app(app):
