@@ -20,6 +20,11 @@ def shared_tank_change(data):
     litres = read_int(data, 'min_gas_l', errors)
     if errors:
         return
+    sharedplan = ShareLink.query.filter_by(hash=data.get('room')).first()
+    if sharedplan is None:
+        return
+    sharedplan.tank = selected_tank
+    db.session.commit()
     bar = min_gas_bar(litres, selected_tank)
     emit('shared_tank_change', ({'bar':bar, 'selected_tank': selected_tank}), to=data['room'])
 
@@ -40,6 +45,7 @@ def plan_change(data):
     sharedplan.depth = depth
     sharedplan.gas = gas
     sharedplan.solve = solve
+    sharedplan.tank = selected_tank
     db.session.commit()
     json_plan = [stop.to_dict() for stop in plan]
     emit('plan_change', ({'depth': data['new_depth'], 'gas': data['new_gas'], 'solve': data['new_solve_time'],

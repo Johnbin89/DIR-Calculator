@@ -56,6 +56,19 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(response.get_json()['depth'], 45)
         self.assertEqual(self.client.get('/api/share/zzzzzz').status_code, 404)
 
+    def test_share_keeps_tank(self):
+        for url, kwargs in (
+            ('/api/share', {'json': {'depth': 45, 'solve': 1, 'gas': 21, 'tank': 14}}),
+            ('/share', {'data': {'depth': '45', 'solve': '1', 'gas': '21', 'tank': '14'}}),
+        ):
+            hash = self.client.post(url, **kwargs).get_json()['hash']
+            data = self.client.get(f'/api/share/{hash}').get_json()
+            self.assertEqual((data['tank'], data['bar']), (14, 120))
+
+    def test_share_defaults_to_d12(self):
+        hash = self.client.post('/api/share', json={'depth': 45, 'solve': 1, 'gas': 21}).get_json()['hash']
+        self.assertEqual(self.client.get(f'/api/share/{hash}').get_json()['tank'], 24)
+
     def test_invalid_tank_rejected(self):
         for tank in (0, -24, 7):
             response = self.client.post('/api/minimum-gas', json={'depth': 45, 'solve': 1, 'gas': 21, 'tank': tank})
@@ -163,3 +176,31 @@ class SocketValidationTestCase(unittest.TestCase):
         self.assertEqual(self.socket.get_received(), [])
         self.socket.emit('shared_tank_change', {**event, 'selected_tank': 24})
         self.assertEqual([event['name'] for event in self.socket.get_received()], ['shared_tank_change'])
+
+    def saved_tank(self):
+        db.session.expire_all()
+        return db.session.scalars(db.select(ShareLink)).one().tank
+
+    def test_tank_change_is_saved_and_loaded(self):
+        self.socket.emit('shared_tank_change', {'room': 'abcdef', 'min_gas_l': 1548, 'selected_tank': 14})
+        self.assertEqual(self.saved_tank(), 14)
+        client = self.app.test_client()
+        data = client.get('/api/share/abcdef').get_json()
+        self.assertEqual((data['tank'], data['bar']), (14, 120))
+        html = client.get('/minimum-gas/abcdef').get_data(as_text=True)
+        self.assertIn('<option selected value="14">D7', html)
+        self.assertIn('120 bar', html)
+        self.assertIn('autocomplete="off"', html)
+
+    def test_invalid_tank_change_not_saved(self):
+        self.socket.emit('shared_tank_change', {'room': 'abcdef', 'min_gas_l': 1548, 'selected_tank': 0})
+        self.assertEqual(self.saved_tank(), 24)
+
+    def test_tank_change_unknown_room_ignored(self):
+        self.socket.emit('shared_tank_change', {'room': 'zzzzzz', 'min_gas_l': 1548, 'selected_tank': 14})
+        self.assertEqual(self.socket.get_received(), [])
+        self.assertEqual(self.saved_tank(), 24)
+
+    def test_plan_change_saves_tank(self):
+        self.plan_change(selected_tank=30)
+        self.assertEqual(self.saved_tank(), 30)

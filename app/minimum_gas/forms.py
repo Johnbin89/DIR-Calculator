@@ -29,7 +29,14 @@ class DiveForm(FlaskForm):
 
 
 class TankForm(FlaskForm):
-    tank = SelectField("Tank", choices=as_choices(TANKS), id="selected_tank")
+    # autocomplete off: browsers otherwise restore the old option on refresh, next
+    # to the pressure the server calculated for the saved tank
+    tank = SelectField(
+        "Tank",
+        choices=as_choices(TANKS),
+        id="selected_tank",
+        render_kw={"autocomplete": "off"},
+    )
     min_gas_L = HiddenField(id="min_gas_l")
 
 

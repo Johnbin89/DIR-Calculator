@@ -34,7 +34,7 @@ def minimum_gas(hash=None):
         depth = sharedplan.depth
         gas_switch = sharedplan.gas
         solve = sharedplan.solve
-        plan, tank_form, bar, litres, time_to_fs, share_form = create_plan(depth, gas_switch, solve)
+        plan, tank_form, bar, litres, time_to_fs, share_form = create_plan(depth, gas_switch, solve, sharedplan.tank)
         form.depth.data = depth
         form.gas.data = gas_switch
         form.solve.data = solve
@@ -57,14 +57,14 @@ def gas_used():
 
 @minimum_gas_bp.route('/share', methods=['POST'])
 def share():
-    depth, solve, gas, _, errors = validate_plan_input(request.form)
+    depth, solve, gas, tank, errors = validate_plan_input(request.form)
     if errors:
         return {'errors': errors}, 422
     warning = plan_warning(depth, gas)
     if warning:
         return {'warning': warning}, 422
     hash = generate_share_hash()
-    sharelink = ShareLink(depth = depth, gas = gas, solve = solve, hash = hash)
+    sharelink = ShareLink(depth = depth, gas = gas, solve = solve, tank = tank, hash = hash)
     db.session.add(sharelink)
     db.session.commit()
     return {'hash': hash}

@@ -50,14 +50,14 @@ def gas_used():
 
 @api_bp.post('/share')
 def share():
-    depth, solve, gas, _, errors = validate_plan_input(request.get_json(silent=True) or {})
+    depth, solve, gas, tank, errors = validate_plan_input(request.get_json(silent=True) or {})
     if errors:
         return {'errors': errors}, 422
     warning = plan_warning(depth, gas)
     if warning:
         return {'warning': warning}, 422
     hash = generate_share_hash()
-    db.session.add(ShareLink(depth=depth, gas=gas, solve=solve, hash=hash))
+    db.session.add(ShareLink(depth=depth, gas=gas, solve=solve, tank=tank, hash=hash))
     db.session.commit()
     return {'hash': hash}
 
@@ -67,4 +67,4 @@ def shared_plan(hash):
     sharedplan = db.session.scalars(db.select(ShareLink).filter_by(hash=hash)).first()
     if sharedplan is None:
         return {'error': 'Shared plan not found'}, 404
-    return {'hash': hash, **plan_response(sharedplan.depth, sharedplan.gas, sharedplan.solve)}
+    return {'hash': hash, **plan_response(sharedplan.depth, sharedplan.gas, sharedplan.solve, sharedplan.tank)}

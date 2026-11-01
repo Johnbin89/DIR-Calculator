@@ -15,6 +15,7 @@ class ShareLink(db.Model):
     depth: so.Mapped[int]
     gas: so.Mapped[int]
     solve: so.Mapped[int]
+    tank: so.Mapped[int] = so.mapped_column(default=24, server_default="24")
     hash: so.Mapped[str] = so.mapped_column(sa.String(6), index=True, unique=True)
     created: so.Mapped[datetime] = so.mapped_column(index=True, default=sa.func.now())
 
