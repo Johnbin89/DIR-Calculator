@@ -1,4 +1,4 @@
-class StopPair():
+class StopPair:
     def __init__(self, depth, time):
         self.depth = depth
         self.time = time
@@ -8,6 +8,6 @@ class StopPair():
 
     def get_time(self):
         return self.time
-    
+
     def to_dict(self):
-        return {'depth': self.get_depth(), 'time': self.get_time()}
+        return {"depth": self.get_depth(), "time": self.get_time()}

@@ -31,8 +31,8 @@ spec:
               # reclaimable page cache.
               memory: 192Mi
             limits:
-              # No CPU limit: single eventlet worker, throttling would
-              # directly stall the websocket event loop.
+              # No CPU limit: single gthread worker, throttling would
+              # directly stall every open websocket.
               memory: 384Mi
 ---
 apiVersion: v1

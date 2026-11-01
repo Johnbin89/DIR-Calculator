@@ -1,21 +1,31 @@
-from app import db
-import sqlalchemy as sa
-import sqlalchemy.orm as so
+import hashlib
+import random
+import string
 from datetime import datetime
 
+import sqlalchemy as sa
+import sqlalchemy.orm as so
+
+from app import db
+
+
 class ShareLink(db.Model):
-    __tablename__ = 'sharelink'
+    __tablename__ = "sharelink"
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     depth: so.Mapped[int]
     gas: so.Mapped[int]
     solve: so.Mapped[int]
-    hash: so.Mapped[str] = so.mapped_column(sa.String(6), index=True,
-                                             unique=True)
-    created: so.Mapped[datetime] = so.mapped_column(
-        index=True, default=sa.func.now())
+    hash: so.Mapped[str] = so.mapped_column(sa.String(6), index=True, unique=True)
+    created: so.Mapped[datetime] = so.mapped_column(index=True, default=sa.func.now())
 
 
-'''
+def generate_share_hash():
+    length = 6
+    random_string = "".join(random.choice(string.ascii_letters) for _ in range(length))
+    return hashlib.sha256(random_string.encode("utf-8")).hexdigest()[:length]
+
+
+"""
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
@@ -33,8 +43,8 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' %self.username
-'''
-'''
+"""
+"""
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -79,4 +89,4 @@ class Image(db.Model):
 
     def __repr__(self):
         return '<Image %r>' %self.image
-'''
+"""
