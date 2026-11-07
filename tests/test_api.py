@@ -21,6 +21,11 @@ class ApiTestCase(unittest.TestCase):
         db.drop_all()
         self.app_context.pop()
 
+    def test_health(self):
+        response = self.client.get('/api/health')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_json(), {'status': 'ok'})
+
     def test_minimum_gas_plan(self):
         response = self.client.post('/api/minimum-gas', json={'depth': 45, 'solve': 1, 'gas': 21})
         self.assertEqual(response.status_code, 200)

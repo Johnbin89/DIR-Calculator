@@ -10,11 +10,15 @@ spec:
       sectionName: dive-calc
   hostnames:
     - "dive-calc.jbin.me"
+  # Only the API and live sharing; the web page at / is served by gasmanager-ui.
   rules:
     - matches:
         - path:
             type: PathPrefix
-            value: /
+            value: /api
+        - path:
+            type: PathPrefix
+            value: /socket.io
       backendRefs:
         - name: gasmanager
           port: 5000

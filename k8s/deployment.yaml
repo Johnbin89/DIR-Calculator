@@ -26,6 +26,27 @@ spec:
           envFrom:
             - secretRef:
                 name: gasmanager-env
+          # boot.sh runs `flask db upgrade` before gunicorn starts.
+          startupProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            periodSeconds: 5
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            periodSeconds: 10
+            timeoutSeconds: 3
+          # Restart only after a minute of no answers, e.g. all gunicorn threads blocked.
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
           resources:
             requests:
               cpu: 25m

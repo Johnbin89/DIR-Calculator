@@ -32,6 +32,12 @@ def plan_response(depth, gas, solve, tank=24):
     }
 
 
+@api_bp.get('/health')
+def health():
+    """Kubernetes probe target. It doesn't touch the database, so a database outage doesn't restart the pod."""
+    return {'status': 'ok'}
+
+
 @api_bp.post('/minimum-gas')
 def minimum_gas():
     depth, solve, gas, tank, errors = validate_plan_input(json_object())
