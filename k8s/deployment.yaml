@@ -13,16 +13,32 @@ spec:
       labels:
         app: gasmanager
     spec:
+      # The image runs as uid 10001; refuse to start it as root if that ever changes.
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: gasmanager
           image: johnbin89/gasmanager:1.0
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          # The only writable path: gunicorn's worker heartbeat files and Python temp files.
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
           ports:
             - containerPort: 5000
           env:
             - name: FLASK_CONFIG
               value: "production"
             - name: SOCKETIO_ALLOWED_ORIGINS
-              value: "https://dive-calc.jbin.me,https://dir-calc.kube.jbin.me"
+              value: "https://dive-calc.jbin.me"
           envFrom:
             - secretRef:
                 name: gasmanager-env
@@ -57,6 +73,11 @@ spec:
               # No CPU limit: single gthread worker, throttling would
               # directly stall every open websocket.
               memory: 384Mi
+      volumes:
+        - name: tmp
+          emptyDir:
+            medium: Memory
+            sizeLimit: 16Mi
 ---
 apiVersion: v1
 kind: Service
